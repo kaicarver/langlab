@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Test</title>
+  <!-- All JS -->
+  <script src="modernizr.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Plugin JS -->
+  <script src="node_modules/ion-sound/js/ion.sound.js"></script>
+  <script src="ion_demo.js"></script>
+  <style>
+    body { text-align: center; }
+    img { width: 30vmin; }
+    .nowrap { white-space: nowrap; }
+    p { font-size: 0.7em; }
+    p.message { font-style: italic; }
+    p.thanks { font-size: 0.65em; }
+    audio { height: 0.5em; width: 2em; }
+    .player { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Test</h2>
+  <div id="demo_01">
+  <span class="nowrap">
+    <span class="is-demo js-sound" data-name="sheng1">
+        <img class="button js-action" data-action="play" src="生0.gif">
+    </span>
+    <span class="is-demo js-sound" data-name="ri4">
+        <img class="button js-action" data-action="play" src="日0.gif">
+    </span>
+  </span>
+  <span class="nowrap">
+    <span class="is-demo js-sound" data-name="kuai4">
+        <img class="button js-action" data-action="play" src="快0.gif">
+    </span>
+    <span class="is-demo js-sound" data-name="le4">
+        <img class="button js-action" data-action="play" src="樂0.gif">
+    </span>
+  </span>
+    <br>
+    <span class="is-demo js-sound" data-name="xi1">
+        <img class="button js-action" data-action="play" src="希0.gif">
+    </span>
+    <span class="is-demo js-sound" data-name="li4">
+        <img class="button js-action" data-action="play" src="莉0.gif">
+    </span>
+    <span class="is-demo js-sound" data-name="ya4">
+        <img class="button js-action" data-action="play" src="亞0.gif">
+    </span>
+
+    <!--    <br>
+
+    <span class="is-demo js-sound" data-name="sheng1">
+        <span class="button js-action" data-action="play">sheng1</span>
+    </span>
+    <span class="is-demo js-sound" data-name="ri4">
+        <span class="button js-action" data-action="play">ri4</span>
+    </span>
+    <span class="is-demo js-sound" data-name="kuai4">
+        <span class="button js-action" data-action="play">kuai4</span>
+    </span>
+    <span class="is-demo js-sound" data-name="le4">
+        <span class="button js-action" data-action="play">le4</span>
+    </span>
+    <span class="is-demo js-sound" data-name="xi1">
+        <span class="button js-action" data-action="play">xi1</span>
+    </span>
+    <span class="is-demo js-sound" data-name="li4">
+        <span class="button js-action" data-action="play">li4</span>
+    </span>
+    <span class="is-demo js-sound" data-name="ya4">
+        <span class="button js-action" data-action="play">ya4</span>
+    </span>
+    -->
+
+    <script>
+      $(document).ready(function () {
+	// just to set up the demo
+	var demo = new ion.Demo("demo_01");
+
+	// init some sounds
+	ion.sound({
+	  sounds: [
+	    {name: "sheng1"},
+	    {name: "ri4"},
+	    {name: "kuai4"},
+	    {name: "le4"},
+	    {name: "xi1"},
+	    {name: "li4"},
+	    {name: "ya4"}	    
+	  ],
+	  
+	  // main config
+	  path: "sounds/",
+	  preload: true,
+	  multiplay: true,
+	  volume: 0.9,
+	  scope: demo,
+	  ready_callback: demo.loaded
+	});
+	$('img').nodoubletapzoom();
+      });
+
+      // jQuery no-double-tap-zoom plugin
+      
+      // Triple-licensed: Public Domain, MIT and WTFPL license - share and enjoy!
+      
+      (function($) {
+	var IS_IOS = /iphone|ipad/i.test(navigator.userAgent);
+	$.fn.nodoubletapzoom = function() {
+	  if (IS_IOS)
+	    $(this).bind('touchstart', function preventZoom(e) {
+	      var t2 = e.timeStamp
+	      , t1 = $(this).data('lastTouch') || t2
+	      , dt = t2 - t1
+	      , fingers = e.originalEvent.touches.length;
+	      $(this).data('lastTouch', t2);
+	      if (!dt || dt > 500 || fingers > 1) return; // not double-tap
+	      
+	      e.preventDefault(); // double tap - prevent the zoom
+	      // also synthesize click events we just swallowed up
+	      $(this).trigger('click').trigger('click');
+	    });
+	};
+      })(jQuery);
+    </script>
+    <!-- ion installed using: "npm install ion-sound" -->
+  </div>
+  <p class="message">
+    Click or tap to hear the sound! Wish you a very <span class="player" onclick="var song = document.getElementById('song'); if (typeof playing === 'undefined' || playing != 1) { song.play(); playing = 1; } else { song.pause(); playing = 0; }">happy birthday</span>! --Kai
+    <audio id="song">
+      <source src="https://raw.githubusercontent.com/kaicarver/midiplayer/master/celia/celia_song_lyrics.mp3" type="audio/mpeg">
+	Your browser does not support the audio element.
+    </audio>
+  </p>
+  <p class="thanks">
+  Thanks to <a href="https://www.mdbg.net/chindict/chindict.php?wdqb=%E7%94%9F%E6%97%A5%E5%BF%AB%E6%A8%82%E5%B8%8C%E8%8E%89%E4%BA%9E">MDBG Chinese-English dictionary</a> and to <a href="http://ionden.com/a/plugins/ion.sound/en.html">Ion.Sound</a> for images and sounds.
+  </p>
+</body>
+</html>
+

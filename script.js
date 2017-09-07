@@ -3,6 +3,12 @@ var supportMsg = document.getElementById('supportMsg');
 if ('speechSynthesis' in window) {
   var msg = new SpeechSynthesisUtterance('hi');
   window.speechSynthesis.speak(msg);
+  // workaround for 15-second time limit on non-native voices
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=335907#c34
+  setTimeout(function() {
+    speechSynthesis.pause();
+    speechSynthesis.resume();
+  }, 10000);
 } else {
   supportMsg.innerHTML = 'Sorry your browser <strong>does not support</strong> speech synthesis.<br>Try this in <a href="http://www.google.co.uk/intl/en/chrome/browser/canary.html">Chrome Canary</a>.';
   supportMsg.classList.add('not-supported');

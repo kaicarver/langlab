@@ -1,0 +1,43 @@
+
+<html>
+  <head><title>Speak</title></head>
+  <body>
+    <h1>Speak</h1>
+    <p>The script below shows an easy way to get a web page to talk.</p>
+    <form method="get">
+      <p>Say:
+	<input type=text name="msg" id="msg" value="hello">
+	<input type="submit">
+      </p>
+    </form>
+    <pre id="code"></pre>
+    <script>
+      // This is all you need to do basic speech synthesis from any web page
+      function speak(text) {
+	if ('speechSynthesis' in window) {
+	  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+	}
+      }
+      // This is just to specify what to say
+      var msg = 'Hey Kai! How are you?';
+      var param = /[&?]msg=([^&]+)/.exec(location.search);
+      if (param) {
+	msg = decodeURIComponent(param[1]).replace(/\+/g, ' ');
+      }
+      document.getElementById('msg').value = msg;
+      speak(msg);
+    </script>
+    <script>
+      document.getElementById('code').innerText = document.getElementsByTagName('script')[0].innerText;
+    </script>
+    <p>TODO: more advanced use: this doesn't work for Chinese yet:</p>
+        <form method="get">
+      <p>Say:
+	<input type=text name="msg" id="msg" value="妳好">
+	<input type="submit">
+      </p>
+    </form>
+
+    
+  </body>
+</html>

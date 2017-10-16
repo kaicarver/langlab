@@ -8,11 +8,12 @@
       <p>Say:
 	<input type=text name="msg" id="msg" value="hello">
 	<input type="submit">
+	<button onclick="speak(document.getElementById('msg').value)">Speak (iOS)</button>
       </p>
     </form>
     <pre id="code"></pre>
     <script>
-      // This is all you need to do basic speech synthesis from any web page
+      // This function is all you need in order to speak text from any web page.
       function speak(text) {
 	if ('speechSynthesis' in window) {
 	  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
@@ -25,6 +26,7 @@
 	msg = decodeURIComponent(param[1]).replace(/\+/g, ' ');
       }
       document.getElementById('msg').value = msg;
+      // Call the function to speak the specified text.
       speak(msg);
     </script>
     <script>
@@ -33,8 +35,9 @@
     <p>TODO: more advanced use: this doesn't work for Chinese yet:</p>
         <form method="get">
       <p>Say:
-	<input type=text name="msg" id="msg" value="妳好">
+	<input type=text name="msg2" id="msg2" value="Chinese hello is 妳好">
 	<input type="submit">
+    <button onclick="void(speak(document.getElementById('msg2').value))">Speak (iOS)</button>
       </p>
     </form>
 

@@ -14,14 +14,19 @@
     <pre id="code"></pre>
     <script>
       // This function is all you need in order to speak text from any web page.
+      // Usage:
+      //   speak("Hello there!");
+  
       function speak(text) {
 	if ('speechSynthesis' in window) {
 	  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
 	}
       }
+    </script>
+    <script>
       // This is just to specify what to say
       var msg = 'Hey Kai! How are you?';
-      var param = /[&?]msg=([^&]+)/.exec(location.search);
+      var param = /[&?]msg.?=([^&]+)/.exec(location.search);
       if (param) {
 	msg = decodeURIComponent(param[1]).replace(/\+/g, ' ');
       }

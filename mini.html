@@ -8,7 +8,7 @@
       <p>Say:
 	<input type=text name="msg" id="msg" value="hello">
 	<input type="submit">
-	<button onclick="speak(document.getElementById('msg').value)">Speak (iOS)</button>
+	<button onclick="speak(document.getElementById('msg').value); return false">Speak (in page)</button>
       </p>
     </form>
     <pre id="code"></pre>
@@ -37,7 +37,7 @@
       <p>Say:
 	<input type=text name="msg2" id="msg2" value="Chinese hello is 妳好">
 	<input type="submit">
-    <button onclick="void(speak(document.getElementById('msg2').value))">Speak (iOS)</button>
+    <button onclick="void(speak(document.getElementById('msg2').value)); return false">Speak (in page)</button>
       </p>
     </form>
 

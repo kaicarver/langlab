@@ -19,7 +19,12 @@ td { padding: 0cm; padding-top: 0.5cm; vertical-align: top; font-size: 10px; lin
 td.hanzi   { font-size: 11px; padding-left: 0.8cm; padding-right: 0.8cm; }  
 td.pinyin  { font-size: 12px; padding-left: 0.8cm; padding-right: 1cm; }  
 td.english { font-size:  7px; padding-left: 0.4cm; padding-right: 0cm; }  
-td.tones   { font-size: 14px; padding-left: 1.0cm; padding-right: 0cm; font-family: monospace; white-space: pre; }  
+td.tones   { font-size: 14px; padding-left: 1.0cm; padding-right: 0cm; }
+.tonenumbers { font-family: monospace; white-space: pre; }
+svg { height: 12px; width: 200px; stroke: green; stroke-width: 1; background-color: white;}
+polyline { fill: none; }
+.tone0, .tone1 { stroke-width: 2; }
+.toneerr { stroke: red; }
 </style>
 <script>
 function fillVerso() {
@@ -27,10 +32,90 @@ function fillVerso() {
   document.querySelectorAll(".pinyin")[1].innerHTML  = document.querySelectorAll(".pinyin")[0].innerHTML 
   document.querySelectorAll(".english")[1].innerHTML = document.querySelectorAll(".english")[0].innerHTML
   document.querySelectorAll(".tones")[1].innerHTML   = document.querySelectorAll(".tones")[0].innerHTML
+  alert("Doubleclick anywhere to see tone graph");
+  }
+function drawTones() {
+  var allTones = [[1,4,4,2,4],
+		  [2,1,1,3,1,2,4,1,2],
+		  [4,4,3,4,1,1],
+		  [4,2,4,3,4],
+		  [4,4,0],
+		  [4,2,4,1],
+		  [1,2,4,4],
+		  [4,2,4,1],
+		  [1,2,4,4],
+		  [4,3,2,2,4,4,2,4],
+		  [4,4,0],
+		  [4,1,3,1,1],
+		  [4,1,2,4],
+		  [2,4,2,4],
+		  [4,1,4,3],
+		  [4,4,1,1,2,4],
+		  [2,4,3,2,2],
+		  [2,3,3,2,2,1,4],
+		  [2,4,1,1,4,4,3],
+		  [2,3,4,3,4,2,4,2,4],
+		  [2,2,2,4,2,2,2,3],
+		  [3,4,2,3,3,4,2,3,3,3],
+		  [2,3,2,4,4],
+		  [2,4,4,2,2],
+		  [3,2,3,2,4],
+		  [2,2,4,3,1,1,3,1,2,4,1,4],
+		  [1,2,4,4],
+		  [2,4,4,4],
+		  [2,3,3,4],
+		  [3,2,1,3,4,3],
+		  [4,4,4,2],
+		  [1,4,1,2],
+		  [1,1,3,1,2,4,1,4],
+		  [2,1,4,1,2,1,3,1,2,2],
+		  [4,1,1,3,1,2,4,1],
+		  [4,4,2,4],
+		  [4,4,2,4],
+		  [4,2,4,4],
+		  [4,2,3,3,4],
+		  [2,2,2,4,3],
+		  [1,2,4,1],
+		  [4,1,1,3,1,2,4,1,4],
+		  [2,1,4,1],
+		  [1,4,1,4,1,2,1,4,1,2,1,1,4],
+		  [2,2,4,2,1]];
+  var svg = "";
+  for (var i = 0; i < allTones.length; i++) {
+    svg += drawTonesList(allTones[i]) + '<br>';
+  }
+  document.querySelectorAll(".tones")[0].innerHTML = svg;
+}
+function drawTonesList(tones) {
+  var svg = "";
+  var tonetitle = "";
+  var height = 17;
+  var width = 10;
+  var margin = 2;
+  for (var i = 0; i < tones.length; i++) {
+    xpos = i*width;
+    var tone = tones[i];
+    if (tone == 1) {         // macron
+      svg += '<line x1="'+(xpos+margin)+'"  y1="'+( 0+margin)+'" x2="'+(xpos+width-margin)+'" y2="'+( 0+margin)+'" />';
+    } else if (tone == 2) {  // acute
+      svg += '<line x1="'+(xpos+margin)+'"  y1="'+(10-margin)+'" x2="'+(xpos+width-margin)+'" y2="'+( 0+margin)+'" />';
+    } else if (tone == 3) {  // caron
+      svg += '<polyline points="'+(xpos+margin)+',5 '+(xpos+5)+','+(10-margin)+' '+(xpos+width-margin)+',5" />';
+    } else if (tone == 4) {  // grave
+      svg += '<line x1="'+(xpos+margin)+'"  y1="'+( 0+margin)+'" x2="'+(xpos+width-margin)+'" y2="'+(10-margin)+'" />';
+    } else if (tone == 0) {  // dot
+      svg += '<line class="tone0" x1="'+(xpos+4)+'"  y1="5"  x2="'+(xpos+6)+'" y2="5" />';
+    } else {                 // x (error)
+      svg += '<polyline class="toneerr" points="'+xpos+',0  '+(xpos+width)+',10" />';
+      svg += '<polyline class="toneerr" points="'+xpos+',10 '+(xpos+width)+',0 " />';
+    }
+    tonetitle += tone + ' ';
+  }
+  return '<svg><g><title>' + tonetitle + '</title>' + svg + '</g></svg>';
 }
 </script>
 </head>
-<body onload="fillVerso()">
+<body onload="fillVerso()" ondblclick="drawTones()">
   <table>
     <col width="25%">
     <col width="25%">
@@ -108,7 +193,7 @@ wú sè shēng xiāng wèi chù fǎ<br>
 wú yǎnjiè nǎizhì wúyìshí jiè<br>
 wú wúmíng yì wú wúmíng jǐn<br>
 nǎizhì wú lǎosǐ yì wú lǎosǐ jǐn<br>
-wú kǔ jí miè dào<br>
+wú kǔjímièdào<br>
 wú zhì yì wú dé<br>
 yǐ wú suǒ dé gù<br>
 pútísàduǒ yī bōrě bōluómìduō gù<br>
@@ -179,7 +264,8 @@ proclaim the mantra which says<br>
 <i>gate gate paragate parasamgate</i> (gone, gone, gone beyond, gone completely beyond)<br>
 <i>bodhi svaha</i> (O enlightenment, all hail!)<br>
 	</td>
-<td class="tones">1 4 4 2 4
+	<td class="tones">
+	  <div class="tonenumbers">1 4 4 2 4
 2 1 1 3 1 2 4 1 2
 4 4 3 4 1 1
 4 2 4 3 4
@@ -224,6 +310,7 @@ proclaim the mantra which says<br>
 2 1 4 1
 1 4 1 4 1 2 1 4 1 2 1 1 4
 2 2 4 2 1
+  </div>
 </td>
       </tr>
     </tbody>
@@ -242,6 +329,6 @@ proclaim the mantra which says<br>
       </tr>
     </tbody>
   </table>
-
+</div>
 </body>
 </html>

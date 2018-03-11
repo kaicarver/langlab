@@ -15,19 +15,25 @@ html{ -webkit-print-color-adjust:exact; }
 body { margin: 0px; padding: 0px; }
 table { width: 100%; }
 td { border: 0px solid black; }
-td { padding: 0cm; padding-top: 0.5cm; vertical-align: top; font-size: 10px; line-height: 16px; }  
-td.hanzi   { font-size: 11px; padding-left: 0.8cm; padding-right: 0.8cm; }  
-td.pinyin  { font-size: 12px; padding-left: 0.8cm; padding-right: 1cm; }  
-td.english { font-size:  7px; padding-left: 0.4cm; padding-right: 0cm; }  
+td { padding: 0cm; padding-top: 0.5cm; vertical-align: top; font-size: 10px; line-height: 16px; }
+td.hanzi   { font-size: 11px; padding-left: 0.8cm; padding-right: 0.8cm; }
+td.pinyin  { font-size: 12px; padding-left: 0.8cm; padding-right: 1cm; }
+td.english { font-size:  7px; padding-left: 0.4cm; padding-right: 0cm; position:relative; }
 td.tones   { font-size: 14px; padding-left: 1.0cm; padding-right: 0cm; }
 .tonenumbers { font-family: monospace; white-space: pre; }
 svg { height: 12px; width: 200px; stroke: black; stroke-width: 1; background-color: white; stroke-width: 2; }
 polyline { fill: none; }
 .tone0, { stroke-width: 2; }
 .toneerr { stroke: red; }
-span.sandhi { font-style: italic; color: blue; } 
-line.sandhi { stroke: blue; } 
-span.sanskrit { font-style: italic; }  
+span.sandhi { font-style: italic; color: blue; }
+line.sandhi { stroke: blue; }
+span.sanskrit { font-style: italic; }
+  #colophon { position: absolute; transform: rotate(-90deg); transform-origin: top left;
+	      top: 92%; left: 92%; width: 200%;
+	      text-align: center; font-style: italic; opacity: 0.7; font-size: 10px; border: solid black 0px;
+	    }
+											  
+#colophon a { text-decoration: none; }
 </style>
 <script>
 function fillVerso() {
@@ -271,6 +277,7 @@ So proclaim the <span class="sanskrit">Prajnaparamita</span> mantra,<br>
 proclaim the mantra which says<br>
 <span class="sanskrit">gate gate paragate parasamgate</span> (gone, gone, gone beyond, gone completely beyond)</span><br>
 <span class="sanskrit">bodhi svaha</span> (O enlightenment, all hail!)</span><br>
+<div id="colophon"><a href="https://github.com/kaicarver/langlab">https://github.com/kaicarver/langlab</a> &mdash; March 11, 2018</div>
 	</td>
 	<td class="tones">
 	  <div class="tonenumbers">1 3 1 2 4 1 1 1
@@ -338,6 +345,5 @@ proclaim the mantra which says<br>
       </tr>
     </tbody>
   </table>
-</div>
 </body>
 </html>

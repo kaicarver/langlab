@@ -13,5 +13,8 @@ https://rawgit.com/kaicarver/langlab/master/xinjing.html<br>
 more info for learning the 心經:<br>
 https://docs.google.com/document/d/1-Zh2lqSocbeILnSVqPcF87dS0j5DYljfjae8TEuM_bE/edit
 
+Play with characters of a text:<br>
+https://rawgit.com/kaicarver/langlab/master/charplay.html
+
 Also see other language lab experiments still, for some reason, stored here:<br>
 https://github.com/kaicarver/HTML5-Audio

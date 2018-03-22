@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Characters Game</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>    
+    <style>
+      #wordblock {
+          list-style-type: none;
+	  margin: 0;
+	  padding: 0;
+	  user-select: none; /* prevent text selection */
+	  background-color: yellow;
+      }
+      #wordblock li {
+	  margin: 0px 0px 0px 0;
+	  padding: 0px;
+	  width: 50px;
+	  float: left;
+	  display: inline-block;
+	  font-size: 3em;
+	  text-align: center;
+	  cursor: pointer;
+	  font-family: arial;
+	  background: white;
+      }
+      td { padding: 2px; }
+      td.unsolved { background-color: pink; }
+      td.solved   { background-color: white; }
+    </style>
+    <script>
+      $(function() {
+	$("#wordblock").sortable();
+	$("#wordblock").disableSelection();
+
+	const word = '般若波羅密多心經';
+	let d_word = word.split('');
+	shuffle(d_word);
+
+	const lis = [];
+	for (let i = 0; i < d_word.length; i++) {
+	  lis.push('<li class="unsolved">' + d_word[i] + '</li>')
+	}
+
+	$('#wordblock').html(lis.join(''));
+
+	$('#wordblock').mouseup(function() {
+	  setTimeout(() => {
+	    let r_word = '';
+	    $('#wordblock>li').each(function(e) {
+	      r_word += $(this).text();
+	    });
+	    if (r_word == word) {
+	      console.log("YOU FOUND IT! : " + r_word);
+	      $('td').each(function(e) {
+		$(this).removeClass('unsolved').addClass('solved');
+	      });
+	    } else {
+	      console.log("Keep trying!");
+	      $('td').each(function(e) {
+		$(this).removeClass('solved').addClass('unsolved');
+	      });
+	    }
+	  }, 0);
+	});
+      });
+
+      function shuffle(a, b, c, d) {
+	c = a.length;
+	while (c) b = Math.random() * (--c + 1) | 0, d = a[c], a[c] = a[b], a[b] = d
+      }
+    </script>
+  </head>
+  <body>
+    <table>
+      <tr>
+	<td class="unsolved">
+	  <ul id="wordblock">
+	  </ul>
+	</td>
+      </tr>
+    </table>
+    <p>
+      Order characters by dragging them around.
+    </p>
+    <p>
+      Initial version from  <a href="https://stackoverflow.com/questions/42333831/javascript-drag-letters-in-word-rearrange/42334240#42334240">Stack Overflow: drag letters in word (Rearrange)</a>
+    </p>
+  </body>
+</html>
+
+
+
+
+

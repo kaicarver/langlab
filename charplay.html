@@ -35,12 +35,18 @@
     </style>
     <script>
       $(function() {
+	const lines = $('#text').text().split("\n");
+	const li = [];
+	for (let i = 0; i < lines.length; i++) {
+	  li.push('<table><tr><td class="unsolved"><ul class="wordblock">' + lines[i] + '</ul></td></tr></table>');
+	}
+	$('#text').html(li.join(''));
+
 	$('.wordblock').each(function(e) {
 	  $(this).sortable();
 	  $(this).disableSelection();
 
 	  const word = $(this).text();
-	  console.log(word);
 	  let d_word = word.split('');
 	  shuffle(d_word);
 
@@ -76,41 +82,52 @@
     </script>
   </head>
   <body>
-    <table>
-      <tr>
-	<td class="unsolved">
-	  <ul class="wordblock">般若波羅密多心經</ul>
-	</td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-	<td class="unsolved">
-	  <ul class="wordblock">觀自在菩薩</ul>
-	</td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-	<td class="unsolved">
-	  <ul class="wordblock">行深般若波羅密多時</ul>
-	</td>
-      </tr>
-     </table>
-    <table>
-     <tr>
-	<td class="unsolved">
-	  <ul class="wordblock">照見五蘊皆空</ul>
-	</td>
-      </tr>
-    </table>
-    <table>
-      <tr>
-	<td class="unsolved">
-	  <ul class="wordblock">度一切苦厄</ul>
-	</td>
-      </tr>
-    </table>
+    <div id="text">般若波羅密多心經
+觀自在菩薩
+行深般若波羅密多時
+照見五蘊皆空
+度一切苦厄
+舍利子
+色不異空
+空不異色
+色即是空
+空即是色
+受想行識亦復如是
+舍利子
+是諸法空相
+不生不滅
+不垢不淨
+不增不減
+是故空中無色
+無受想行識
+無眼耳鼻舌身意
+無色聲香味觸法
+無眼界乃至無意識界
+無無明亦無無明盡
+乃至無老死亦無老死盡
+無苦集滅道
+無智亦無得
+以無所得故
+菩提薩埵依般若波羅密多故
+心無罣礙
+無罣礙故
+無有恐怖
+遠離顛倒夢想
+究竟涅槃
+三世諸佛
+依般若波羅密多故
+得阿耨多羅三藐三菩提
+故知般若波羅密多
+是大神咒
+是大明咒
+是無上咒
+是無等等咒
+能除一切苦
+真實不虛
+故說般若波羅密多咒
+即說咒曰
+揭帝揭帝般羅揭帝般羅僧揭帝
+菩提薩婆訶</div>
     <p>
       Order characters by dragging them around.
     </p>
@@ -119,8 +136,6 @@
     </p>
   </body>
 </html>
-
-
 
 
 

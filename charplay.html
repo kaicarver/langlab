@@ -8,14 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
     <script src="jquery.ui.touch-punch.min.js"></script>
     <style>
-      #wordblock {
+      .wordblock {
           list-style-type: none;
 	  margin: 0;
 	  padding: 0;
 	  user-select: none; /* prevent text selection */
 	  background-color: yellow;
       }
-      #wordblock li {
+      .wordblock li {
 	  margin: 0px 0px 0px 0;
 	  padding: 0px;
 	  width: 50px;
@@ -33,41 +33,40 @@
     </style>
     <script>
       $(function() {
-	$("#wordblock").sortable();
-	$("#wordblock").disableSelection();
+	$('.wordblock').each(function(e) {
+	  $(this).sortable();
+	  $(this).disableSelection();
 
-	const word = '般若波羅密多心經';
-	let d_word = word.split('');
-	shuffle(d_word);
+	  const word = $(this).text();
+	  console.log(word);
+	  let d_word = word.split('');
+	  shuffle(d_word);
 
-	const lis = [];
-	for (let i = 0; i < d_word.length; i++) {
-	  lis.push('<li class="unsolved">' + d_word[i] + '</li>')
-	}
+	  const lis = [];
+	  for (let i = 0; i < d_word.length; i++) {
+	    lis.push('<li class="unsolved">' + d_word[i] + '</li>')
+	  }
 
-	$('#wordblock').html(lis.join(''));
+	  $(this).html(lis.join(''));
 
-	$('#wordblock').mouseup(function() {
-	  setTimeout(() => {
-	    let r_word = '';
-	    $('#wordblock>li').each(function(e) {
-	      r_word += $(this).text();
-	    });
-	    if (r_word == word) {
-	      console.log("YOU FOUND IT! : " + r_word);
-	      $('td').each(function(e) {
-		$(this).removeClass('unsolved').addClass('solved');
+	  $(this).mouseup(function() {
+	    setTimeout(() => {
+	      let r_word = '';
+	      $(this).children('li').each(function(e) {
+		r_word += $(this).text();
 	      });
-	    } else {
-	      console.log("Keep trying!");
-	      $('td').each(function(e) {
-		$(this).removeClass('solved').addClass('unsolved');
-	      });
-	    }
-	  }, 0);
+	      if (r_word == word) {
+		console.log("YOU FOUND IT! : " + r_word);
+		$(this).parent().removeClass('unsolved').addClass('solved');
+	      } else {
+		console.log("Keep trying!");
+		$(this).parent().removeClass('solved').addClass('unsolved');
+	      }
+	    }, 0);
+	  });
 	});
       });
-
+ 
       function shuffle(a, b, c, d) {
 	c = a.length;
 	while (c) b = Math.random() * (--c + 1) | 0, d = a[c], a[c] = a[b], a[b] = d
@@ -78,8 +77,27 @@
     <table>
       <tr>
 	<td class="unsolved">
-	  <ul id="wordblock">
-	  </ul>
+	  <ul class="wordblock">般若波羅密多心經</ul>
+	</td>
+      </tr>
+      <tr>
+	<td class="unsolved">
+	  <ul class="wordblock">觀自在菩薩</ul>
+	</td>
+      </tr>
+      <tr>
+	<td class="unsolved">
+	  <ul class="wordblock">行深般若波羅密多時</ul>
+	</td>
+      </tr>
+      <tr>
+	<td class="unsolved">
+	  <ul class="wordblock">照見五蘊皆空</ul>
+	</td>
+      </tr>
+      <tr>
+	<td class="unsolved">
+	  <ul class="wordblock">度一切苦厄</ul>
 	</td>
       </tr>
     </table>

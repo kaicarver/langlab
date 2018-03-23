@@ -29,9 +29,12 @@
 	  background: white;
       }
       table { margin-top: -6px; }
-      td { padding: 2px; margin: -2px; }
+      td { padding: 2px; }
       td.unsolved { background-color: pink; }
       td.solved   { background-color: white; }
+      #puzzle { display: table-cell; padding-top: 6px; }
+      #puzzle.unsolved { border: solid red 1px; }
+      #puzzle.solved   { border: solid white 1px; }
       .puzzletext { display: none; }
     </style>
     <script>
@@ -49,7 +52,7 @@
 
 	  const word = $(this).text();
 	  let d_word = word.split('');
-	  shuffle(d_word);
+	  //shuffle(d_word);
 
 	  const lis = [];
 	  for (let i = 0; i < d_word.length; i++) {
@@ -65,17 +68,32 @@
 		r_word += $(this).text();
 	      });
 	      if (r_word == word) {
-		console.log("YOU FOUND IT! : " + r_word);
+		//console.log("YOU FOUND IT! : " + r_word);
 		$(this).parent().removeClass('unsolved').addClass('solved');
+		checkSolved();
 	      } else {
-		console.log("Keep trying!");
+		//console.log("Keep trying!");
 		$(this).parent().removeClass('solved').addClass('unsolved');
+		$('#puzzle').removeClass('solved').addClass('unsolved');
 	      }
 	    }, 0);
 	  });
 	});
       });
 
+      function checkSolved() {
+	var solved = true;
+	$('.wordblock').each(function(e) {
+	  if ($(this).parent().attr('class') === 'unsolved') {
+	    solved = false;
+	    return false;
+	  }
+	});
+	if (solved) {
+	  //console.log("Solved ENTIRE puzzle!");
+	  $('#puzzle').removeClass('unsolved').addClass('solved');
+	}
+      }
       function shuffle(a, b, c, d) {
 	c = a.length;
 	while (c) b = Math.random() * (--c + 1) | 0, d = a[c], a[c] = a[b], a[b] = d
@@ -83,7 +101,7 @@
     </script>
   </head>
   <body>
-    <div id="puzzle"></div>
+    <div id="puzzle" class="unsolved"></div>
     <!-- 靜夜思 -->
     <div class="puzzletext" id="puzzletext1">床前明月光
 疑是地上霜

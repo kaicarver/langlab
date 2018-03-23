@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Characters Game</title>
+    <title>Text Puzzle Game</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
@@ -36,8 +36,10 @@
       #puzzle.unsolved { border: solid red 1px; }
       #puzzle.solved   { border: solid white 1px; }
       .puzzletext { display: none; }
+      #credits { font-size: 0.6em; }
     </style>
     <script>
+      var timer; // this global should be handled better...
       $(function() {
 	const lines = $('#puzzletext1').text().split("\n");
 	const li = [];
@@ -46,13 +48,19 @@
 	}
 	$('#puzzle').html(li.join(''));
 
+	var elem = document.getElementById("stopwatch");
+	timer = new Stopwatch(elem, { precision: 0, delay: 1000, controls: false });
+	timer.start();
+
 	$('.wordblock').each(function(e) {
 	  $(this).sortable();
 	  $(this).disableSelection();
 
 	  const word = $(this).text();
 	  let d_word = word.split('');
-	  shuffle(d_word);
+	  if (location.hash !== '#debug') {
+	    shuffle(d_word);
+	  }
 
 	  const lis = [];
 	  for (let i = 0; i < d_word.length; i++) {
@@ -60,6 +68,7 @@
 	  }
 
 	  $(this).html(lis.join(''));
+	  var t0 = Date.now();
 
 	  $(this).mouseup(function() {
 	    setTimeout(() => {
@@ -91,6 +100,12 @@
 	});
 	if (solved) {
 	  //console.log("Solved ENTIRE puzzle!");
+	  timer.stop();
+	  if (location.hash !== '#debug') {
+	    $('#instructions').text('Congratulations! Puzzle solved in');
+	  } else {
+	    $('#instructions').text('Puzzle "solved" in debug mode in ');
+	  }
 	  $('#puzzle').removeClass('unsolved').addClass('solved');
 	}
       }
@@ -98,18 +113,106 @@
 	c = a.length;
 	while (c) b = Math.random() * (--c + 1) | 0, d = a[c], a[c] = a[b], a[b] = d
       }
+
+      // stopwatch code a slightly modified version of this nice answer:
+      // https://stackoverflow.com/questions/20318822/how-to-create-a-stopwatch-using-javascript/20319035#20319035
+      var Stopwatch = function(elem, options) {
+
+	var timer       = createTimer(),
+	    startButton = createButton("start", start),
+	    stopButton  = createButton("stop", stop),
+	    resetButton = createButton("reset", reset),
+	    offset,
+	    clock,
+	    interval;
+
+	// default options
+	options = options || {};
+	options.delay = options.delay || 10;
+	options.controls = options.controls;
+	options.precision = (typeof options.precision !== "undefined") ? options.precision : 2;
+
+	// append elements
+	elem.appendChild(timer);
+	if (options.controls) {
+	  elem.appendChild(startButton);
+	  elem.appendChild(stopButton);
+	  elem.appendChild(resetButton);
+	}
+
+	// initialize
+	reset();
+
+	// private functions
+	function createTimer() {
+	  return document.createElement("span");
+	}
+
+	function createButton(action, handler) {
+	  var a = document.createElement("a");
+	  a.href = "#" + action;
+	  a.innerHTML = action;
+	  a.addEventListener("click", function(event) {
+	    handler();
+	    event.preventDefault();
+	  });
+	  return a;
+	}
+
+	function start() {
+	  if (!interval) {
+	    offset   = Date.now();
+	    interval = setInterval(update, options.delay);
+	  }
+	}
+
+	function stop() {
+	  if (interval) {
+	    clearInterval(interval);
+	    interval = null;
+	  }
+	}
+
+	function reset() {
+	  clock = 0;
+	  render();
+	}
+
+	function update() {
+	  clock += delta();
+	  render();
+	}
+
+	function render() {
+	  var val = clock/1000;
+	  timer.innerHTML = val.toFixed(options.precision);
+	}
+
+	function delta() {
+	  var now = Date.now(),
+	      d   = now - offset;
+	  offset = now;
+	  return d;
+	}
+
+	// public API
+	this.start  = start;
+	this.stop   = stop;
+	this.reset  = reset;
+      };
     </script>
   </head>
   <body>
     <div id="puzzle" class="unsolved"></div>
     <p>
-      Order characters by dragging them around.
+      <span id="instructions">Solve puzzle by dragging characters around.<br>
+	Time spent:</span> <span id="stopwatch"></span> seconds.
     </p>
-    <p>
-      Initial version from  <a href="https://stackoverflow.com/questions/42333831/javascript-drag-letters-in-word-rearrange/42334240#42334240">Stack Overflow: drag letters in word (Rearrange)</a>
-    </p>
-    <p id="colophon">Source code:
-      <a href="https://github.com/kaicarver/langlab">https://github.com/kaicarver/langlab</a> &mdash; March 23, 2018
+    <p id="credits">
+      Credits:<br>
+      Initial version from <a target="_blank" href="https://stackoverflow.com/questions/42333831/javascript-drag-letters-in-word-rearrange/42334240#42334240">Stack Overflow: drag letters in word (Rearrange)</a><br>
+      Source code:
+      <a target="_blank" href="https://github.com/kaicarver/langlab">https://github.com/kaicarver/langlab</a>
     </p>
     <!-- Below are the possible puzzle texts -->
     <!-- 靜夜思 -->

@@ -54,13 +54,13 @@
 	$('#puzzle').html(li.join(''));
 	// list available texts
 	li = [];
+	let tparams = (new URL(location)).searchParams;
 	$('.puzzletext').each(function(e) {
 	  let id = $(this).attr('id');
 	  let classattr = (id === curtextid) ? 'class="curpuzzle" ' : '';
-	  params.set('text', id);
-	  li.push('<a ' + classattr+ 'href="' + location.pathname + '?' + params + '">' + id + '</a> ');
+	  tparams.set('text', id);
+	  li.push('<a ' + classattr+ 'href="' + location.pathname + '?' + tparams + '">' + id + '</a> ');
 	});
-	params.set('text', curtextid);
 	$('#puzzlelist').html('Puzzles: ' + li.join(''));
 	// timer for current puzzle
 	var elem = document.getElementById("stopwatch");
@@ -95,8 +95,9 @@
 	    $(this).mouseup();
 	  });
 	}
-	params.set('study', '');
-	$('#instructions').append('(<a href="' + location.pathname + '?' + params + '">Study</a>)');
+	tparams = (new URL(location)).searchParams;
+	tparams.set('study', '');
+	$('#instructions').append('(<a href="' + location.pathname + '?' + tparams + '">Study</a>)');
       });
       function checkLineSolved(line, word) {
 	let r_word = '';

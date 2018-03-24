@@ -41,9 +41,10 @@
     </style>
     <script>
       var timer; // this global should be handled better...
+      var params = (new URL(location)).searchParams;
       $(function() {
 	// insert specified puzzle text
-	let curtextid = (new URL(location)).searchParams.get('text');
+	let curtextid = params.get('text');
 	if (!$('#'+curtextid).length) { curtextid = 'jingyesi'; }
 	const lines = $('#'+curtextid).text().split("\n");
 	var li = [];
@@ -56,8 +57,10 @@
 	$('.puzzletext').each(function(e) {
 	  let id = $(this).attr('id');
 	  let classattr = (id === curtextid) ? 'class="curpuzzle" ' : '';
-	  li.push('<a ' + classattr+ 'href="' + location.pathname + '?text=' + id + location.hash + '">' + id + '</a> ');
+	  params.set('text', id);
+	  li.push('<a ' + classattr+ 'href="' + location.pathname + '?' + params + '">' + id + '</a> ');
 	});
+	params.set('text', curtextid);
 	$('#puzzlelist').html('Puzzles: ' + li.join(''));
 	// timer for current puzzle
 	var elem = document.getElementById("stopwatch");
@@ -70,7 +73,7 @@
 
 	  const word = $(this).text();
 	  let d_word = word.split('');
-	  if (location.hash !== '#debug' && location.hash !== '#study') {
+	  if (params.get('debug') === null && params.get('study') === null) {
 	    shuffle(d_word);
 	  }
 
@@ -86,12 +89,14 @@
 	    }, 0);
 	  });
 	});
-	if (location.hash !== '#debug') {
+	if (params.get('debug') === null) {
 	  // check whether anything in initial scramble is solved
 	  $('.wordblock').each(function(e) {
 	    $(this).mouseup();
 	  });
 	}
+	params.set('study', '');
+	$('#instructions').append('(<a href="' + location.pathname + '?' + params + '">Study</a>)');
       });
       function checkLineSolved(line, word) {
 	let r_word = '';
@@ -117,13 +122,13 @@
 	if (solved) {
 	  //console.log("Solved ENTIRE puzzle!");
 	  timer.stop();
-	  if (location.hash === '#debug') {
-	    $('#instructions').text('Debug mode. ');
-	  } else if (location.hash === '#study') {
-	    $('#instructions').text('Study mode.');
-	    $('#timer').css('display', 'none');
+	  if (params.get('debug') !== null) {
+	    $('#instructions').html('Debug mode "solved". ');
+	  } else if (params.get('study') !== null) {
+	    params.delete('study');
+	    $('#instructions').html('Study mode. (<a href="' + location.pathname + '?' + params + '">Puzzle</a>)');
 	  } else {
-	    $('#instructions').text('Congratulations! Puzzle solved in');
+	    $('#instructions').html('Puzzle solved, congratulations!');
 	  }
 	  $('#puzzle').removeClass('unsolved').addClass('solved');
 	}
@@ -228,8 +233,8 @@
     </p>
     <div id="puzzle" class="unsolved"></div>
     <p>
-      <span id="instructions">Solve puzzle by dragging characters around.<br>
-	Time spent:</span><span id="timer"> <span id="stopwatch"></span> seconds.</span>
+      <span id="instructions">Solve puzzle by dragging characters around. </span><br>
+	Time spent: <span id="timer"> <span id="stopwatch"></span> seconds.</span>
     </p>
     <p id="credits">
       Credits:<br>

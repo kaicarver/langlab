@@ -70,7 +70,7 @@
 
 	  const word = $(this).text();
 	  let d_word = word.split('');
-	  if (location.hash !== '#debug') {
+	  if (location.hash !== '#debug' && location.hash !== '#study') {
 	    shuffle(d_word);
 	  }
 
@@ -78,31 +78,35 @@
 	  for (let i = 0; i < d_word.length; i++) {
 	    lis.push('<li class="unsolved">' + d_word[i] + '</li>')
 	  }
-
 	  $(this).html(lis.join(''));
-	  var t0 = Date.now();
 
 	  $(this).mouseup(function() {
 	    setTimeout(() => {
-	      let r_word = '';
-	      $(this).children('li').each(function(e) {
-		r_word += $(this).text();
-	      });
-	      if (r_word == word) {
-		//console.log("YOU FOUND IT! : " + r_word);
-		$(this).parent().removeClass('unsolved').addClass('solved');
-		checkSolved();
-	      } else {
-		//console.log("Keep trying!");
-		$(this).parent().removeClass('solved').addClass('unsolved');
-		$('#puzzle').removeClass('solved').addClass('unsolved');
-	      }
+	      checkLineSolved($(this), word);
 	    }, 0);
 	  });
 	});
+	if (location.hash !== '#debug') {
+	  // check whether anything in initial scramble is solved
+	  $('.wordblock').each(function(e) {
+	    $(this).mouseup();
+	  });
+	}
       });
-
-      function checkSolved() {
+      function checkLineSolved(line, word) {
+	let r_word = '';
+	$(line).children('li').each(function(e) {
+	  r_word += $(this).text();
+	});
+	if (r_word == word) {
+	  $(line).parent().removeClass('unsolved').addClass('solved');
+	  checkAllSolved();
+	} else {
+	  $(line).parent().removeClass('solved').addClass('unsolved');
+	  $('#puzzle').removeClass('solved').addClass('unsolved');
+	}
+      }
+      function checkAllSolved() {
 	var solved = true;
 	$('.wordblock').each(function(e) {
 	  if ($(this).parent().attr('class') === 'unsolved') {
@@ -113,10 +117,13 @@
 	if (solved) {
 	  //console.log("Solved ENTIRE puzzle!");
 	  timer.stop();
-	  if (location.hash !== '#debug') {
-	    $('#instructions').text('Congratulations! Puzzle solved in');
+	  if (location.hash === '#debug') {
+	    $('#instructions').text('Debug mode. ');
+	  } else if (location.hash === '#study') {
+	    $('#instructions').text('Study mode.');
+	    $('#timer').css('display', 'none');
 	  } else {
-	    $('#instructions').text('Puzzle "solved" in debug mode in ');
+	    $('#instructions').text('Congratulations! Puzzle solved in');
 	  }
 	  $('#puzzle').removeClass('unsolved').addClass('solved');
 	}
@@ -222,7 +229,7 @@
     <div id="puzzle" class="unsolved"></div>
     <p>
       <span id="instructions">Solve puzzle by dragging characters around.<br>
-	Time spent:</span> <span id="stopwatch"></span> seconds.
+	Time spent:</span><span id="timer"> <span id="stopwatch"></span> seconds.</span>
     </p>
     <p id="credits">
       Credits:<br>

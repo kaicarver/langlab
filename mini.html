@@ -12,7 +12,7 @@
     </form>
     <pre id="code"></pre>
     <script>
-      // This function is all you need in order to speak text from any web page.
+      // This function is all you need in order to speak text from any web page (in the default language).
       // Usage:
       //   speak("Hello there!");
   
@@ -36,15 +36,19 @@
     <script>
       document.getElementById('code').innerText = document.getElementsByTagName('script')[0].innerText;
     </script>
-    <p>TODO: more advanced use: this doesn't work for Chinese yet:</p>
-        <form method="get">
+    <p>TODO: more advanced use: this does not work for Chinese yet:</p>
+    <form method="get">
       <p>Say:
 	<input type=text name="msg2" id="msg2" value="Chinese hello is 妳好">
 	<input type="submit">
     <button onclick="void(speak(document.getElementById('msg2').value)); return false">Speak (in page)</button>
       </p>
     </form>
-
-    
+    <p>This simple web-based
+      <a href="https://rawgit.com/mdn/web-speech-api/master/speak-easy-synthesis/index.html">speech syntesizer</a>
+      from the
+      <a href="https://github.com/mdn/web-speech-api">Web Speech API demos by MDN Web Docs</a>
+      also handles language, pitch, and rate (but my version handles URL parameters...).
+    </p>
   </body>
 </html>

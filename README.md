@@ -16,5 +16,8 @@ https://docs.google.com/document/d/1-Zh2lqSocbeILnSVqPcF87dS0j5DYljfjae8TEuM_bE/
 Play with characters of a text:<br>
 https://rawgit.com/kaicarver/langlab/master/charplay.html
 
+Minimal web-based speech synthesis:<br>
+https://rawgit.com/kaicarver/langlab/master/mini.html
+
 Also see other language lab experiments still, for some reason, stored here:<br>
 https://github.com/kaicarver/HTML5-Audio

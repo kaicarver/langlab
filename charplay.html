@@ -57,9 +57,10 @@
 	let tparams = (new URL(location)).searchParams;
 	$('.puzzletext').each(function(e) {
 	  let id = $(this).attr('id');
+	  let title = $(this).attr('title') || '';
 	  let classattr = (id === curtextid) ? 'class="curpuzzle" ' : '';
 	  tparams.set('text', id);
-	  li.push('<a ' + classattr+ 'href="' + location.pathname + '?' + tparams + '">' + id + '</a> ');
+	  li.push('<a ' + classattr + 'href="' + location.pathname + '?' + tparams + '" title="' + title + '">' + id + '</a> ');
 	});
 	$('#puzzlelist').html('Puzzles: ' + li.join(''));
 	// timer for current puzzle
@@ -319,7 +320,7 @@
     <!-- 般若波羅密多心經 -->
     <div class="puzzletext" id="xinjing2">觀自在菩薩行深般若波羅密多時照見五蘊皆空度一切苦厄舍利子色不異空空不異色色即是空空即是色受想行識亦復如是舍利子是諸法空相不生不滅不垢不淨不增不減是故空中無色無受想行識無眼耳鼻舌身意無色聲香味觸法無眼界乃至無意識界無無明亦無無明盡乃至無老死亦無老死盡無苦集滅道無智亦無得以無所得故菩提薩埵依般若波羅密多故心無罣礙無罣礙故無有恐怖遠離顛倒夢想究竟涅槃三世諸佛依般若波羅密多故得阿耨多羅三藐三菩提故知般若波羅密多是大神咒是大明咒是無上咒是無等等咒能除一切苦真實不虛故說般若波羅密多咒即說咒曰揭帝揭帝般羅揭帝般羅僧揭帝菩提薩婆訶</div>
 <!-- https://www.omniglot.com/writing/japanese_hiragana.htm -->
-<div class="puzzletext" id="hiragana">あいうえお
+<div class="puzzletext" id="hiragana" title="a i ɯ e o / ka ki kɯ ke ko / sa ɕi sɯ se so / ta t͡ɕi t͡sɯ te to / na ɲi nɯ ne no / ha çi ɸɯ he ho / ma mi mɯ me mo / ja jɯ jo / ɾa ɾi ɾɯ ɾe ɾo / ɰa (ɰ)i (ɰ)e (ɰ)o / n">あいうえお
 かきくけこ
 さしすせそ
 たちつてと
@@ -331,7 +332,7 @@
 わゐ　ゑを
 　　ん　　</div>
 <!-- https://www.omniglot.com/writing/japanese_katakana.htm -->
-<div class="puzzletext" id="katakana">アイウエオ
+<div class="puzzletext" id="katakana" title="a i ɯ e o / ka ki kɯ ke ko / sa ɕi sɯ se so / ta t͡ɕi t͡sɯ te to / na ɲi nɯ ne no / ha çi ɸɯ he ho / ma mi mɯ me mo / ja jɯ jo / ɾa ɾi ɾɯ ɾe ɾo / ɰa (ɰ)i (ɰ)e (ɰ)o / n">アイウエオ
 カキクケコ
 サシスセソ
 タチツテト
@@ -342,8 +343,8 @@
 ラリルレロ
 ワヰ　ヱヲ
 　　ン　　</div>
-<!-- https://en.wikipedia.org/wiki/Iroha -->
-<div class="puzzletext" id="iroha">いろはにほへと
+<!-- Iroha in hiragana https://en.wikipedia.org/wiki/Iroha -->
+<div class="puzzletext" id="iroha" title="iro ha nihoheto / chirinuru wo / wa ka yo tare so / tsune naramu / uwi no okuyama / kefu koete / asaki yume mishi / wehi mo sesu">いろはにほへと
 ちりぬるを
 わかよたれそ
 つねならむ
@@ -351,8 +352,8 @@
 けふこえて
 あさきゆめみし
 ゑひもせす</div>
-<!-- https://en.wikipedia.org/wiki/Iroha -->
-<div class="puzzletext" id="irohak">イロハニホヘト
+<!-- Iroha in katakana https://en.wikipedia.org/wiki/Iroha -->
+<div class="puzzletext" id="irohak" title="iro ha nihoheto / chirinuru wo / wa ka yo tare so / tsune naramu / uwi no okuyama / kefu koete / asaki yume mishi / wehi mo sesu">イロハニホヘト
 チリヌルヲ
 ワカヨタレソ
 ツネナラム
@@ -366,12 +367,11 @@
 生滅滅已
 寂滅為樂</div>
 <!-- https://en.wikipedia.org/wiki/Hangul#South_Korean_order -->
-<div class="puzzletext" id="hangul">
-ㄱㄴㄷㄹㅁㅂㅅ
+<div class="puzzletext" id="hangul" title="g n d r m b s / j ch k t p h – / a ya eo yeo / o yo u yu eu i">ㄱㄴㄷㄹㅁㅂㅅ
 ㅈㅊㅋㅌㅍㅎㅇ
 ㅏㅑㅓㅕ
 ㅗㅛㅜㅠㅡㅣ</div>
-<div class="puzzletext" id="zhuyin">ㄅㄆㄇㄈ
+<div class="puzzletext" id="zhuyin" title="p pʰ m f t tʰ n l k kʰ x tɕ tɕʰ ɕ ʈʂ ʈʂʰ ʂ ɻ ts tsʰ s a o ɤ e ai ei au ou an ən aŋ əŋ aɚ i u y">ㄅㄆㄇㄈ
 ㄉㄊㄋㄌ
 ㄍㄎㄏ
 ㄐㄑㄒ
@@ -386,36 +386,36 @@ FGHIJ
 KLMNOP
 QRSTU
 VWXYZ</div>
-<div class="puzzletext" id="greek">ΑΒΓΔΕ
+<div class="puzzletext" id="greek" title="alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon phi chi psi omega">ΑΒΓΔΕ
 ΖΗΘΙΚ
 ΛΜΝΞΟ
 ΠΡΣΤΥ
 ΦΧΨΩ</div>
-<div class="puzzletext" id="russian">АБВГД
+<div class="puzzletext" id="russian" title="a b v g d e ë ž z i j k l m n o p r s t u f x c č š šč '' y ' è ju ja">АБВГД
 ЕЁЖЗИ
 ЙКЛМН
 ОПРСТ
 УФХЦЧ
 ШЩЪЫЬ
 ЭЮЯ</div>
-<div class="puzzletext" id="hebrew">אבגדה
+<div class="puzzletext" id="hebrew" title="alef bet gimel dalet he / vav zayin het tet yod / kaf lamed mem nun samekh / ayin pe tsadi qof resh / shin tav">אבגדה
 וזחטי
 כלמנס
 עפצקר
 שת</div>
-<!-- old abjadi order: "abjad hawwaz ḥuṭṭī kalaman sa‘faṣ qarashat thakhadh ḍaẓagh" -->
-<div class="puzzletext" id="arabica">ابجده
-وزحطي
-كلمنس
-عفصقر
-شتثخذ
-ضظغ</div>
 <!-- more standard hija'i order based on similarities in letter shapes -->
-<div class="puzzletext" id="arabic">ابتثج
+<div class="puzzletext" id="arabic" title="’alif bā’ tā’ thā’ jīm / ḥā’ khā’ dāl dhāl rā’ / zayn sīn shīn ṣād ḍād / ṭā’ ẓā’ ‘ayn ghayn fā’ / qāf kāf lām mīm nūn / hā’ wāw yā’">ابتثج
 حخدذر
 زسشصض
 طظعغف
 قكلمن
 هوي</div>
+<!-- old abjadi order -->
+<div class="puzzletext" id="arabica" title="abjad hawwaz ḥuṭṭī kalaman sa‘faṣ qarashat thakhadh ḍaẓagh">ابجده
+وزحطي
+كلمنس
+عفصقر
+شتثخذ
+ضظغ</div>
   </body>
 </html>

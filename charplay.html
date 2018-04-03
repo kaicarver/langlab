@@ -47,6 +47,7 @@
 	let curtextid = params.get('text');
 	if (!$('#'+curtextid).length) { curtextid = 'jingyesi'; }
 	const lines = $('#'+curtextid).text().split("\n");
+	//const cheats = $('#'+curtextid).attr('title').split(" ");
 	var li = [];
 	for (let i = 0; i < lines.length; i++) {
 	  li.push('<table><tr><td class="unsolved"><ul class="wordblock">' + lines[i] + '</ul></td></tr></table>');
@@ -80,7 +81,7 @@
 
 	  const lis = [];
 	  for (let i = 0; i < d_word.length; i++) {
-	    lis.push('<li class="unsolved">' + d_word[i] + '</li>')
+	    lis.push('<li class="unsolved" title="x' + i + '">' + d_word[i] + '</li>')
 	  }
 	  $(this).html(lis.join(''));
 
@@ -319,6 +320,23 @@
 菩提薩婆訶</div>
     <!-- 般若波羅密多心經 -->
     <div class="puzzletext" id="xinjing2">觀自在菩薩行深般若波羅密多時照見五蘊皆空度一切苦厄舍利子色不異空空不異色色即是空空即是色受想行識亦復如是舍利子是諸法空相不生不滅不垢不淨不增不減是故空中無色無受想行識無眼耳鼻舌身意無色聲香味觸法無眼界乃至無意識界無無明亦無無明盡乃至無老死亦無老死盡無苦集滅道無智亦無得以無所得故菩提薩埵依般若波羅密多故心無罣礙無罣礙故無有恐怖遠離顛倒夢想究竟涅槃三世諸佛依般若波羅密多故得阿耨多羅三藐三菩提故知般若波羅密多是大神咒是大明咒是無上咒是無等等咒能除一切苦真實不虛故說般若波羅密多咒即說咒曰揭帝揭帝般羅揭帝般羅僧揭帝菩提薩婆訶</div>
+    <!-- https://en.wikipedia.org/wiki/Sexagenary_cycle#Ten_Heavenly_Stems -->
+    <div class="puzzletext" id="ganzhi" title="jiǎ yǐ bǐng dīng wù / jǐ gēng xīn rén guǐ / zǐ chǒu yín mǎo / chén sì wǔ wèi / shēn yǒu xū hài">甲乙丙丁戊
+己庚辛壬癸
+子丑寅卯
+辰巳午未
+申酉戌亥</div>
+    <!-- https://en.wikipedia.org/wiki/Sexagenary_cycle#Sexagenary_years -->
+    <div class="puzzletext" id="ganzhi60" title="jiǎ-zǐ yǐ-chǒu bǐng-yín dīng-mǎo wù-chén jǐ-sì / gēng-wǔ xīn-wèi rén-shēn guǐ-yǒu jiǎ-xū yǐ-hài / bǐng-zǐ dīng-chǒu wù-yín jǐ-mǎo gēng-chén xīn-sì / rén-wǔ guǐ-wèi jiǎ-shēn yǐ-yǒu bǐng-xū dīng-hài / wù-zǐ jǐ-chǒu gēng-yín xīn-mǎo rén-chén guǐ-sì / jiǎ-wǔ yǐ-wèi bǐng-shēn dīng-yǒu wù-xū jǐ-hài / gēng-zǐ xīn-chǒu rén-yín guǐ-mǎo jiǎ-chén yǐ-sì / bǐng-wǔ dīng-wèi wù-shēn jǐ-yǒu gēng-xū xīn-hài / rén-zǐ guǐ-chǒu jiǎ-yín yǐ-mǎo bǐng-chén dīng-sì / wù-wǔ jǐ-wèi gēng-shēn xīn-yǒu rén-xū guǐ-hài">甲子乙丑丙寅丁卯戊辰己巳
+庚午辛未壬申癸酉甲戌乙亥
+丙子丁丑戊寅己卯庚辰辛巳
+壬午癸未甲申乙酉丙戌丁亥
+戊子己丑庚寅辛卯壬辰癸巳
+甲午乙未丙申丁酉戊戌己亥
+庚子辛丑壬寅癸卯甲辰乙巳
+丙午丁未戊申己酉庚戌辛亥
+壬子癸丑甲寅乙卯丙辰丁巳
+戊午己未庚申辛酉壬戌癸亥</div>
 <!-- https://www.omniglot.com/writing/japanese_hiragana.htm -->
 <div class="puzzletext" id="hiragana" title="a i ɯ e o / ka ki kɯ ke ko / sa ɕi sɯ se so / ta t͡ɕi t͡sɯ te to / na ɲi nɯ ne no / ha çi ɸɯ he ho / ma mi mɯ me mo / ja jɯ jo / ɾa ɾi ɾɯ ɾe ɾo / ɰa (ɰ)i (ɰ)e (ɰ)o / n">あいうえお
 かきくけこ
@@ -386,11 +404,21 @@ FGHIJ
 KLMNOP
 QRSTU
 VWXYZ</div>
+<div class="puzzletext" id="latinm">abcde
+fghij
+klmnop
+qrstu
+vwxyz</div>
 <div class="puzzletext" id="greek" title="alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon phi chi psi omega">ΑΒΓΔΕ
 ΖΗΘΙΚ
 ΛΜΝΞΟ
 ΠΡΣΤΥ
 ΦΧΨΩ</div>
+<div class="puzzletext" id="greekm" title="alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau upsilon phi chi psi omega">αβγδε
+ζηθικ
+λμνξο
+πρστυ
+φχψω</div>
 <div class="puzzletext" id="russian" title="a b v g d e ë ž z i j k l m n o p r s t u f x c č š šč '' y ' è ju ja">АБВГД
 ЕЁЖЗИ
 ЙКЛМН
@@ -398,6 +426,13 @@ VWXYZ</div>
 УФХЦЧ
 ШЩЪЫЬ
 ЭЮЯ</div>
+<div class="puzzletext" id="russianm" title="a b v g d e ë ž z i j k l m n o p r s t u f x c č š šč '' y ' è ju ja">абвгд
+еёжзи
+йклмн
+опрст
+уфхцч
+шщъыь
+эюя</div>
 <div class="puzzletext" id="hebrew" title="alef bet gimel dalet he / vav zayin het tet yod / kaf lamed mem nun samekh / ayin pe tsadi qof resh / shin tav">אבגדה
 וזחטי
 כלמנס
@@ -410,7 +445,7 @@ VWXYZ</div>
 طظعغف
 قكلمن
 هوي</div>
-<!-- old abjadi order -->
+<!-- old abjadi order, pronounced "abjad hawwaz ḥuṭṭī kalaman sa‘faṣ qarashat thakhadh ḍaẓagh" -->
 <div class="puzzletext" id="arabica" title="abjad hawwaz ḥuṭṭī kalaman sa‘faṣ qarashat thakhadh ḍaẓagh">ابجده
 وزحطي
 كلمنس

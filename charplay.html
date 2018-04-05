@@ -28,6 +28,7 @@
 	  font-family: arial;
 	  background: white;
       }
+      .zodiac_puzzle li { font-size: 2.4em; } // zodiac symbols are a little big
       table { margin-top: -6px; }
       td { padding: 2px; }
       td.unsolved { background-color: pink; }
@@ -50,7 +51,7 @@
 	//const cheats = $('#'+curtextid).attr('title').split(" ");
 	var li = [];
 	for (let i = 0; i < lines.length; i++) {
-	  li.push('<table><tr><td class="unsolved"><ul class="wordblock">' + lines[i] + '</ul></td></tr></table>');
+	  li.push('<table><tr><td class="unsolved"><ul class="wordblock ' + curtextid + '_puzzle">' + lines[i] + '</ul></td></tr></table>');
 	}
 	$('#puzzle').html(li.join(''));
 	// list available texts
@@ -81,7 +82,9 @@
 
 	  const lis = [];
 	  for (let i = 0; i < d_word.length; i++) {
-	    lis.push('<li class="unsolved" title="x' + i + '">' + d_word[i] + '</li>')
+	    // for emoji to display as text would need to concatenate Unicode Variation Selector &#xFE0E;
+	    // but I don't know how to make checkLineSolved work then...
+	    lis.push('<li class="unsolved" title="x' + i + '">' + d_word[i] + '</li>');
 	  }
 	  $(this).html(lis.join(''));
 
@@ -338,8 +341,13 @@
 壬子癸丑甲寅乙卯丙辰丁巳
 戊午己未庚申辛酉壬戌癸亥</div>
     <!-- https://en.wikipedia.org/wiki/Chinese_zodiac -->
-    <div class="puzzletext" id="shengxiao" title="shǔ niú hǔ tù lóng shé / mǎ yáng hóu jī gǒu zhū">鼠牛虎兔龍蛇
+    <div class="puzzletext" id="shengxiao" title="shǔ niú hǔ tù lóng shé
+mǎ yáng hóu jī gǒu zhū">鼠牛虎兔龍蛇
 馬羊猴雞狗豬</div>
+    <!-- https://en.wikipedia.org/wiki/Zodiac -->
+    <div class="puzzletext" id="zodiac" title="Aries Taurus Gemini Cancer Leo Virgo
+Libra Scorpio Sagittarius Capricorn Aquarius Pisces">♈♉♊♋♌♍
+♎♐♏♑♒♓</div>
 <!-- https://www.omniglot.com/writing/japanese_hiragana.htm -->
 <div class="puzzletext" id="hiragana" title="a i ɯ e o / ka ki kɯ ke ko / sa ɕi sɯ se so / ta t͡ɕi t͡sɯ te to / na ɲi nɯ ne no / ha çi ɸɯ he ho / ma mi mɯ me mo / ja jɯ jo / ɾa ɾi ɾɯ ɾe ɾo / ɰa (ɰ)i (ɰ)e (ɰ)o / n">あいうえお
 かきくけこ

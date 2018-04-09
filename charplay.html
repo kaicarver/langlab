@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Text Puzzle Game</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
@@ -39,6 +40,7 @@
       .puzzletext { display: none; }
       a.curpuzzle { font-weight: bold; }
       #credits { font-size: 0.6em; }
+      #puzzlelist { xwidth: 300px; }
     </style>
     <script>
       var timer; // this global should be handled better...
@@ -235,7 +237,7 @@
   </head>
   <body>
     <p id="puzzlelist">
-      Texts: x y z
+      [List of puzzles]
     </p>
     <div id="puzzle" class="unsolved"></div>
     <p>
@@ -463,5 +465,11 @@ vwxyz</div>
 عفصقر
 شتثخذ
 ضظغ</div>
+<!-- http://qaz.wtf/u/braille.cgi?text=abcdefghijklmnopqrstuvxyzw -->
+<div class="puzzletext" id="braille" title="abcdefghij
+klmnopqrst
+uvxyz    w">⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚
+⠅⠇⠍⠝⠕⠏⠟⠗⠎⠞
+⠥⠧⠭⠽⠵　　　　⠺</div>
   </body>
 </html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Word Puzzle Game</title>
+    <style>
+      .poem-indented { margin-left: 1em; }
+      .match { color: red; border: solid lightgray 1px; xpadding: 5px; margin: -1px; }
+    </style>
+    <script>
+      var nodes = [];
+      function wordplay(id, pattern) {
+	console.log('wordplay: ', id, pattern);
+	let x = document.getElementById(id);
+
+	var walker = document.createTreeWalker(x, NodeFilter.SHOW_TEXT,
+				  function(node) {
+				    return NodeFilter.FILTER_ACCEPT;
+				  }, false);
+	while (walker.nextNode()) {
+	  //console.log(walker.currentNode);
+	  nodes.push(walker.currentNode);
+	}
+	pat = 'íce';
+	//var re = new RegExp('ire');
+	var re = new RegExp(pattern);
+	for (let i = 0; i < nodes.length; i++) {
+	  let t = nodes[i].textContent;
+	  //if (t.match(/[a-z]/i)) {
+	  if (re.exec(t)) {
+	    let span = document.createElement("span");
+	    span.innerHTML = t.trim() + ' ';
+	    span.className = 'match';
+	    nodes[i].replaceWith(span)
+	  }
+	}
+      }
+    </script>
+  </head>
+  <body onload="wordplay('fire_and_ice', 'íce')">
+    <div>
+      <p>Fire and Ice</p>
+      <div class="poem" id="fire_and_ice">
+	<p>Some say the world will end in <i>fire</i>,<br>
+	  <span class="poem-indented">Some say in <i>ice</i>.</span><br>
+	  From what I’ve tasted of desire<br>
+	  I hold with those who favor fire.<br>
+	  <span class="poem-indented">But if it had to perish twice,</span><br>
+	  I think I know enough of hate<br>
+	  <span class="poem-indented">To say that for destruction ice</span><br>
+	  Is also great<br>
+	  <span class="poem-indented">And would suffice.</span></p>
+      </div>
+      <p> -- Robert Frost</p>
+    </div>
+    <div>
+      Match: <input type="text" id="pattern" value="ice" oninput="wordplay('fire_and_ice', this.value)"/>
+    </div>
+  </body>
+</html>

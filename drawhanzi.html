@@ -5,33 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Draw Hanzi</title>
     <style>
-      svg { transform: scale(1, -1); border: solid lightgray 1; }
-      polyline {fill: none; stroke: blue; stroke-width: 30; } 
+      svg { border: solid lightgray 1; }
+      polyline { fill: none; stroke: blue; stroke-width: 30; }
     </style>
+    <script>
+      function drawInput() {
+	let testinput = document.getElementById("testinput").value;
+	console.log("text is", testinput);
+	let characters = testinput.split('');
+	characters.forEach(c => drawHanzi(c));
+      }
+      function drawHanzi(hanzi) {
+	let url = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/' + hanzi + '.json';
+	fetch(url)
+	  .then(res => res.json())
+	  .then(out => {
+	    drawMedians(out.medians);
+	  })
+	  .catch(err => {
+	    console.log("error on character", hanzi, "fetching", url);
+	    //throw err;
+	    drawMedians([]);
+	  });
+      }
+      function drawMedians(medians) {
+	console.log('got a character with', medians.length, 'strokes');
+	let svg = ['<svg height="50" width="50" viewBox="0 0 1024 1024">',
+		   '<g transform="scale(1, -1) translate(0, -900)">'];
+	for (let s = 0; s < medians.length; s++) {
+	  let stroke = medians[s];
+	  let points = [];
+	  for (let p = 0; p < stroke.length; p++) {
+	    points.push(stroke[p][0] + ',' + stroke[p][1]);
+	  }
+	  svg.push('<polyline points="' + points.join(' ') + '"/>')
+	}
+	svg.push('</g>');
+	svg.push('</svg>');
+	document.getElementById('tests').innerHTML += svg.join("\n");
+      }
+    </script>
     <body>
-      <p>drawn from medians extracted from this JSON here:<br>
+      <p>The character 我 below is drawn from the "median" points extracted from this JSON:<br>
 	<a href="https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/我.json">https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/我.json</a><br>
-	from <a href="https://chanind.github.io/hanzi-writer-data/#25105">https://chanind.github.io/hanzi-writer-data/#25105</a><br>
-	from <a href="https://github.com/chanind/hanzi-writer-data">https://github.com/chanind/hanzi-writer-data</a><br>
-	from <a href="https://github.com/skishore/makemeahanzi">https://github.com/skishore/makemeahanzi</a>
+	from the Hanzi Writer Data Explorer <a href="https://chanind.github.io/hanzi-writer-data/#25105">https://chanind.github.io/hanzi-writer-data/#25105</a><br>
+	from the Hanzi Writer Data repository <a href="https://github.com/chanind/hanzi-writer-data">https://github.com/chanind/hanzi-writer-data</a><br>
+	from Shaunak Kishore's Make Me a Hanzi project <a href="https://www.skishore.me/makemeahanzi/">https://www.skishore.me/makemeahanzi/</a>
       </p>
-      <svg height="50" width="50" viewBox="0 0 1100 800">
-	<polyline points="458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522"/>
-	<polyline points="174,404 215,398 241,402 672,514 742,521"/>
-	<polyline points="323,556 351,542 365,522 361,116 340,67 246,113"/>
-	<polyline points="100,206 124,195 163,189 492,334"/>
-	<polyline points="492,807 537,760 538,627 569,435 612,299 676,170 717,112 779,48 817,22 859,12 880,78 891,140 886,147 894,173"/>
-	<polyline points="723,412 737,365 664,259 594,198 489,142 454,132"/>
-	<polyline points="657,710 750,668 781,634"/>
+      <svg height="50" width="50" viewBox="0 0 1024 1024">
+	<g transform="scale(1, -1) translate(0, -900)">
+	  <polyline points="458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522"/>
+	  <polyline points="174,404 215,398 241,402 672,514 742,521"/>
+	  <polyline points="323,556 351,542 365,522 361,116 340,67 246,113"/>
+	  <polyline points="100,206 124,195 163,189 492,334"/>
+	  <polyline points="492,807 537,760 538,627 569,435 612,299 676,170 717,112 779,48 817,22 859,12 880,78 891,140 886,147 894,173"/>
+	  <polyline points="723,412 737,365 664,259 594,198 489,142 454,132"/>
+	  <polyline points="657,710 750,668 781,634"/>
+	</g>
       </svg>
-      <svg height="50" width="50" viewBox="0 0 1100 800">
-	<polyline points="458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522"/>
-	<polyline points="174,404 215,398 241,402 672,514 742,521"/>
-	<polyline points="323,556 351,542 365,522 361,116 340,67 246,113"/>
-	<polyline points="100,206 124,195 163,189 492,334"/>
-	<polyline points="492,807 537,760 538,627 569,435 612,299 676,170 717,112 779,48 817,22 859,12 880,78 891,140 886,147 894,173"/>
-	<polyline points="723,412 737,365 664,259 594,198 489,142 454,132"/>
-	<polyline points="657,710 750,668 781,634"/>
-      </svg>
+      <p>Try it out:
+	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Draw</button></p>
+      <p id="tests"></p>
     </body>
 </html>

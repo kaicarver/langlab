@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Draw Hanzi</title>
     <style>
-      svg { border: solid lightgray 1; }
+      .charlist { display: flex; flex-wrap: wrap; }
+      .charimg { border: solid lightgray 1px; }
     </style>
     <script>
       function drawInput() {
@@ -29,18 +30,15 @@
       }
       function drawMedians(medians) {
 	console.log('got a character with', medians.length, 'strokes');
-	let svg = ['<svg height="50" width="50" viewBox="0 0 1024 1024">',
+	let svg = ['<div class="charimg"><svg height="50" width="50" viewBox="0 0 1024 1024">',
 		   '<g transform="scale(1, -1) translate(0, -900)">'];
-	for (let s = 0; s < medians.length; s++) {
-	  let stroke = medians[s];
+	medians.forEach(stroke => {
 	  let points = [];
-	  for (let p = 0; p < stroke.length; p++) {
-	    points.push(stroke[p][0] + ',' + stroke[p][1]);
-	  }
+	  stroke.forEach(point => points.push(point[0] + ',' + point[1]));
 	  svg.push('<path d="M' + points.join(' ') + '" stroke="blue" stroke-width="30" fill="none"/>');
-	}
+	});
 	svg.push('</g>');
-	svg.push('</svg>');
+	svg.push('</svg></div>');
 	document.getElementById('tests').innerHTML += svg.join("\n");
       }
     </script>
@@ -51,6 +49,7 @@
 	from the Hanzi Writer Data repository <a href="https://github.com/chanind/hanzi-writer-data">https://github.com/chanind/hanzi-writer-data</a><br>
 	from Shaunak Kishore's Make Me a Hanzi project <a href="https://www.skishore.me/makemeahanzi/">https://www.skishore.me/makemeahanzi/</a>
       </p>
+      <div class="charlist"><div class="charimg">
       <svg height="50" width="50" viewBox="0 0 1024 1024">
 	<g transform="scale(1, -1) translate(0, -900)">
 	  <path d="M458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522" stroke="blue" stroke-width="30" fill="none"/>
@@ -62,8 +61,9 @@
 	  <path d="M657,710 750,668 781,634" stroke="blue" stroke-width="30" fill="none"/>
 	</g>
       </svg>
+      </div></div>
       <p>Try it out:
 	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Draw</button></p>
-      <p id="tests"></p>
+      <p class="charlist" id="tests"></p>
     </body>
 </html>

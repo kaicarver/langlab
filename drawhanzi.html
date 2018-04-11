@@ -6,7 +6,6 @@
     <title>Draw Hanzi</title>
     <style>
       svg { border: solid lightgray 1; }
-      polyline { fill: none; stroke: blue; stroke-width: 30; }
     </style>
     <script>
       function drawInput() {
@@ -38,7 +37,7 @@
 	  for (let p = 0; p < stroke.length; p++) {
 	    points.push(stroke[p][0] + ',' + stroke[p][1]);
 	  }
-	  svg.push('<polyline points="' + points.join(' ') + '"/>')
+	  svg.push('<path d="M' + points.join(' ') + '" stroke="blue" stroke-width="30" fill="none"/>');
 	}
 	svg.push('</g>');
 	svg.push('</svg>');
@@ -54,13 +53,13 @@
       </p>
       <svg height="50" width="50" viewBox="0 0 1024 1024">
 	<g transform="scale(1, -1) translate(0, -900)">
-	  <polyline points="458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522"/>
-	  <polyline points="174,404 215,398 241,402 672,514 742,521"/>
-	  <polyline points="323,556 351,542 365,522 361,116 340,67 246,113"/>
-	  <polyline points="100,206 124,195 163,189 492,334"/>
-	  <polyline points="492,807 537,760 538,627 569,435 612,299 676,170 717,112 779,48 817,22 859,12 880,78 891,140 886,147 894,173"/>
-	  <polyline points="723,412 737,365 664,259 594,198 489,142 454,132"/>
-	  <polyline points="657,710 750,668 781,634"/>
+	  <path d="M458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522" stroke="blue" stroke-width="30" fill="none"/>
+	  <path d="M174,404 215,398 241,402 672,514 742,521" stroke="blue" stroke-width="30" fill="none"/>
+	  <path d="M323,556 351,542 365,522 361,116 340,67 246,113" stroke="blue" stroke-width="30" fill="none"/>
+	  <path d="M100,206 124,195 163,189 492,334" stroke="blue" stroke-width="30" fill="none"/>
+	  <path d="M492,807 537,760 538,627 569,435 612,299 676,170 717,112 779,48 817,22 859,12 880,78 891,140 886,147 894,173" stroke="blue" stroke-width="30" fill="none"/>
+	  <path d="M723,412 737,365 664,259 594,198 489,142 454,132" stroke="blue" stroke-width="30" fill="none"/>
+	  <path d="M657,710 750,668 781,634" stroke="blue" stroke-width="30" fill="none"/>
 	</g>
       </svg>
       <p>Try it out:

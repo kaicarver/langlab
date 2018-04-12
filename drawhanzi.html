@@ -8,12 +8,22 @@
       .charlist { display: flex; flex-wrap: wrap; }
       .charimg { border: solid lightgray 1px; }
     </style>
+
+	<script src="pathformer.js"></script>
+	<script src="vivus.js"></script>
+
+    <!-- <script src="vivus.min.js"></script> -->
     <script>
+      var animated;
+      window.onload = function () {
+	animated = new Vivus('example', { type: 'oneByOne', duration: 200, pathTimingFunction: Vivus.EASE_IN });
+      }
       function drawInput() {
 	let testinput = document.getElementById("testinput").value;
 	console.log("text is", testinput);
 	let characters = testinput.split('');
 	characters.forEach(c => drawHanzi(c));
+	//animated.reset().play(1)
       }
       function drawHanzi(hanzi) {
 	let url = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/' + hanzi + '.json';
@@ -41,16 +51,33 @@
 	svg.push('</svg></div>');
 	document.getElementById('tests').innerHTML += svg.join("\n");
       }
+      function animateHanzi() {
+	let pathDur = 20;
+	//setTimeout(() => {
+	  document.querySelectorAll("svg")
+	  .forEach(s => {
+	    let numstrokes = s.children[0].children.length || 1;
+	    console.log("new svg click handler", numstrokes, s);
+	      new Vivus(s, { type: 'oneByOne', duration: numstrokes * pathDur, pathTimingFunction: Vivus.EASE_IN });
+	      s.onclick =
+		z => {
+		  console.log("new Vivus", numstrokes * pathDur, s);
+		  new Vivus(z.target, { type: 'oneByOne', duration: numstrokes * pathDur, pathTimingFunction: Vivus.EASE_IN })
+		  //new Vivus(z.target, { type: 'oneByOne', duration: 400, pathTimingFunction: (x) => { return x < 0.49 ? x*2 : 0.99 } })
+		}
+	    })
+	//}, 1000);
+      }
     </script>
     <body>
       <p>The character 我 below is drawn from the "median" points extracted from this JSON:<br>
 	<a href="https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/我.json">https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/我.json</a><br>
 	from the Hanzi Writer Data Explorer <a href="https://chanind.github.io/hanzi-writer-data/#25105">https://chanind.github.io/hanzi-writer-data/#25105</a><br>
 	from the Hanzi Writer Data repository <a href="https://github.com/chanind/hanzi-writer-data">https://github.com/chanind/hanzi-writer-data</a><br>
-	from Shaunak Kishore's Make Me a Hanzi project <a href="https://www.skishore.me/makemeahanzi/">https://www.skishore.me/makemeahanzi/</a>
+	from the Make Me a Hanzi project by Shaunak Kishore <a href="https://www.skishore.me/makemeahanzi/">https://www.skishore.me/makemeahanzi/</a>
       </p>
       <div class="charlist"><div class="charimg">
-      <svg height="50" width="50" viewBox="0 0 1024 1024">
+      <svg id="example" height="50" width="50" viewBox="0 0 1024 1024">
 	<g transform="scale(1, -1) translate(0, -900)">
 	  <path d="M458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522" stroke="blue" stroke-width="30" fill="none"/>
 	  <path d="M174,404 215,398 241,402 672,514 742,521" stroke="blue" stroke-width="30" fill="none"/>
@@ -63,7 +90,9 @@
       </svg>
       </div></div>
       <p>Try it out:
-	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Draw</button></p>
+	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Draw</button>
+      </p>
       <p class="charlist" id="tests"></p>
+      <p><button onclick="animateHanzi()">Animate</button></p>
     </body>
 </html>

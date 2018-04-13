@@ -25,6 +25,8 @@ var setupEnv, requestAnimFrame, cancelAnimFrame, parsePositiveInt;
  *   animTimingFunction <function> timing animation function for the complete SVG
  *   forceRender <boolean> force the browser to re-render all updated path items
  *   selfDestroy <boolean> removes all extra styling on the SVG, and leaves it as original
+ *   equalPathTimes <int> (path length) take about the same time to draw each path element
+ *     by pretending every path is at least this long (useful for Chinese character stroke animation)
  *
  * The attribute 'type' is by default on 'delayed'.
  *  - 'delayed'
@@ -209,6 +211,7 @@ Vivus.prototype.setOptions = function (options) {
   this.forceRender  = options.hasOwnProperty('forceRender') ? !!options.forceRender : this.isIE;
   this.reverseStack = !!options.reverseStack;
   this.selfDestroy  = !!options.selfDestroy;
+  this.equalPathTimes  = parsePositiveInt(options.equalPathTimes, 0);
   this.onReady      = options.onReady;
   this.map          = [];
   this.frameLength  = this.currentFrame = this.delayUnit = this.speed = this.handle = null;
@@ -268,7 +271,6 @@ Vivus.prototype.mapping = function () {
   var i, paths, path, pAttrs, pathObj, totalLength, lengthMeter, timePoint;
   timePoint = totalLength = lengthMeter = 0;
   paths = this.el.querySelectorAll('path');
-
   for (i = 0; i < paths.length; i++) {
     path = paths[i];
     if (this.isInvisible(path)) {
@@ -276,7 +278,7 @@ Vivus.prototype.mapping = function () {
     }
     pathObj = {
       el: path,
-      length: Math.ceil(path.getTotalLength())
+      length: this.equalPathTimes ? Math.max(this.equalPathTimes, Math.ceil(path.getTotalLength())) : Math.ceil(path.getTotalLength())
     };
     // Test if the path length is correct
     if (isNaN(pathObj.length)) {

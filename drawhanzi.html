@@ -14,16 +14,13 @@
 
     <!-- <script src="vivus.min.js"></script> -->
     <script>
-      var animated;
       window.onload = function () {
-	animated = new Vivus('example', { type: 'oneByOne', duration: 200, pathTimingFunction: Vivus.EASE_IN });
+	new Vivus('example', { type: 'oneByOne', duration: 200, pathTimingFunction: Vivus.EASE_IN });
       }
       function drawInput() {
 	let testinput = document.getElementById("testinput").value;
-	console.log("text is", testinput);
 	let characters = testinput.split('');
 	characters.forEach(c => drawHanzi(c));
-	//animated.reset().play(1)
       }
       function drawHanzi(hanzi) {
 	let url = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/' + hanzi + '.json';
@@ -39,7 +36,6 @@
 	  });
       }
       function drawMedians(medians) {
-	console.log('got a character with', medians.length, 'strokes');
 	let svg = ['<div class="charimg"><svg height="50" width="50" viewBox="0 0 1024 1024">',
 		   '<g transform="scale(1, -1) translate(0, -900)">'];
 	medians.forEach(stroke => {
@@ -52,21 +48,26 @@
 	document.getElementById('tests').innerHTML += svg.join("\n");
       }
       function animateHanzi() {
-	let pathDur = 20;
-	//setTimeout(() => {
-	  document.querySelectorAll("svg")
+	// number of frames per stroke: the more strokes, the longer it takes to write
+	let pathDuration = document.getElementById('pathDuration').value;
+	let minPathLength = 1000; // every path will be drawn as slowly as a path of this length
+	document.querySelectorAll("svg")
 	  .forEach(s => {
 	    let numstrokes = s.children[0].children.length || 1;
-	    console.log("new svg click handler", numstrokes, s);
-	      new Vivus(s, { type: 'oneByOne', duration: numstrokes * pathDur, pathTimingFunction: Vivus.EASE_IN });
-	      s.onclick =
-		z => {
-		  console.log("new Vivus", numstrokes * pathDur, s);
-		  new Vivus(z.target, { type: 'oneByOne', duration: numstrokes * pathDur, pathTimingFunction: Vivus.EASE_IN })
-		  //new Vivus(z.target, { type: 'oneByOne', duration: 400, pathTimingFunction: (x) => { return x < 0.49 ? x*2 : 0.99 } })
+	    new Vivus(s, { type: 'oneByOne', duration: numstrokes * pathDuration,
+			   pathTimingFunction: Vivus.EASE_IN, equalPathTimes: minPathLength });
+	    s.onclick =
+	      z => {
+		let pathDuration = document.getElementById('pathDuration').value;
+		let el = z.target;
+		if (el.constructor == window.SVGPathElement) {
+		  // sometimes the click happens on a path, not the svg, in that case just get its ancestor svg
+		  el = el.parentNode.parentNode;
 		}
-	    })
-	//}, 1000);
+		new Vivus(el, { type: 'oneByOne', duration: numstrokes * pathDuration,
+				      pathTimingFunction: Vivus.EASE_IN, equalPathTimes: minPathLength })
+	      };
+	  });
       }
     </script>
     <body>
@@ -93,6 +94,9 @@
 	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Draw</button>
       </p>
       <p class="charlist" id="tests"></p>
-      <p><button onclick="animateHanzi()">Animate</button></p>
+      <p>
+	<button onclick="animateHanzi()">Animate</button>
+	Fast <input type="range" min="1" max="100" value="30" id="pathDuration"> Slow
+      </p>
     </body>
 </html>

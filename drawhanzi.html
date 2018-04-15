@@ -27,10 +27,10 @@
 	  return sequence.then(function() {
 	    return getHanziJson(hanzi);
 	  }).then(res => res.json())
-	    .then(out => drawHanzi(out.medians))
+	    .then(out => drawHanzi(hanzi, out.medians))
 	    .catch(err => {
 	      console.log("error on character", hanzi, err);
-	      drawHanzi([]);
+	      drawHanzi(hanzi, []);
 	    })
 	}, Promise.resolve());
       }
@@ -38,8 +38,8 @@
 	let url = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/' + hanzi + '.json';
 	return fetch(url);
       }
-      function drawHanzi(medians) {
-	let svg = ['<div class="charimg"><svg height="50" width="50" viewBox="0 0 1024 1024">',
+      function drawHanzi(hanzi, medians) {
+	let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="50" width="50" viewBox="0 0 1024 1024">',
 		   '<g transform="scale(1, -1) translate(0, -900)">'];
 	medians.forEach(stroke => {
 	  let points = [];

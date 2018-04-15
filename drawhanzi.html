@@ -7,6 +7,7 @@
     <style>
       .charlist { display: flex; flex-wrap: wrap; }
       .charimg { border: solid lightgray 1px; }
+      #testinput { width: 20em; }
     </style>
 
 	<script src="pathformer.js"></script>
@@ -20,22 +21,24 @@
       function drawInput() {
 	let testinput = document.getElementById("testinput").value;
 	let characters = testinput.split('');
-	characters.forEach(c => drawHanzi(c));
+	// get and display characters as a sequence of Promises
+	// https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
+	let out = characters.reduce((sequence, hanzi) => {
+	  return sequence.then(function() {
+	    return getHanziJson(hanzi);
+	  }).then(res => res.json())
+	    .then(out => drawHanzi(out.medians))
+	    .catch(err => {
+	      console.log("error on character", hanzi, err);
+	      drawHanzi([]);
+	    })
+	}, Promise.resolve());
       }
-      function drawHanzi(hanzi) {
+      function getHanziJson(hanzi) {
 	let url = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/' + hanzi + '.json';
-	fetch(url)
-	  .then(res => res.json())
-	  .then(out => {
-	    drawMedians(out.medians);
-	  })
-	  .catch(err => {
-	    console.log("error on character", hanzi, "fetching", url);
-	    //throw err;
-	    drawMedians([]);
-	  });
+	return fetch(url);
       }
-      function drawMedians(medians) {
+      function drawHanzi(medians) {
 	let svg = ['<div class="charimg"><svg height="50" width="50" viewBox="0 0 1024 1024">',
 		   '<g transform="scale(1, -1) translate(0, -900)">'];
 	medians.forEach(stroke => {
@@ -91,7 +94,7 @@
       </svg>
       </div></div>
       <p>Try it out:
-	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Draw</button>
+	<input type="text" value="道可道非常道憂鬱的臺灣烏龜" id="testinput"><button onclick="drawInput()">Draw</button>
       </p>
       <p class="charlist" id="tests"></p>
       <p>

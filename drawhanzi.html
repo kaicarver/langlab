@@ -10,11 +10,16 @@
       #testinput { width: 20em; }
     </style>
     <script src="pathformer.js"></script>
-    <script src="vivus.js"></script> <-- slightly modified by adding pathTimingFunction option -->
+    <script src="vivus.js"></script> <!-- slightly modified by adding pathTimingFunction option -->
     <!-- <script src="vivus.min.js"></script> -->
     <script>
       window.onload = function () {
 	new Vivus('example', { type: 'oneByOne', duration: 200, pathTimingFunction: Vivus.EASE_IN });
+	var params = (new URL(location)).searchParams;
+	if (params.get('text') != null) {
+	  document.getElementById("testinput").value = params.get('text');
+	  drawInput();
+	}
       }
       function drawInput() {
 	let testinput = document.getElementById("testinput").value;
@@ -66,10 +71,11 @@
 				      pathTimingFunction: Vivus.EASE_IN, equalPathTimes: minPathLength })
 	      };
 	  });
+	document.getElementById('clickhint').innerHTML = '(click any character to animate it)';
       }
     </script>
     <body>
-      <p>The character 我 below is drawn from the "median" points extracted from this JSON:<br>
+      <p>The character 我 below is drawn from the "median" points listed in this JSON data:<br>
 	<a href="https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/我.json">https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/我.json</a><br>
 	from the Hanzi Writer Data Explorer <a href="https://chanind.github.io/hanzi-writer-data/#25105">https://chanind.github.io/hanzi-writer-data/#25105</a><br>
 	from the Hanzi Writer Data repository <a href="https://github.com/chanind/hanzi-writer-data">https://github.com/chanind/hanzi-writer-data</a><br>
@@ -89,12 +95,14 @@
       </svg>
       </div></div>
       <p>Try it out:
-	<input type="text" value="道可道非常道憂鬱的臺灣烏龜" id="testinput"><button onclick="drawInput()">Draw</button>
+	<input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Write</button>
       </p>
       <p class="charlist" id="tests"></p>
       <p>
-	<button onclick="animateHanzi()">Animate</button>
+	<button onclick="animateHanzi()">Animate All</button>
 	Fast <input type="range" min="1" max="100" value="30" id="pathDuration"> Slow
+	<span id="clickhint"></span>
       </p>
+      <p>Example: <a href="?text=憂鬱的臺灣烏龜">Some complicated characters</a>
     </body>
 </html>

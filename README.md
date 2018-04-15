@@ -16,6 +16,9 @@ https://docs.google.com/document/d/1-Zh2lqSocbeILnSVqPcF87dS0j5DYljfjae8TEuM_bE/
 Play with characters of a text:<br>
 https://rawgit.com/kaicarver/langlab/master/charplay.html
 
+Write characters in SVG:<br>
+https://rawgit.com/kaicarver/langlab/master/drawhanzi.html
+
 Minimal web-based speech synthesis:<br>
 https://rawgit.com/kaicarver/langlab/master/mini.html
 

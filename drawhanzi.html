@@ -9,10 +9,8 @@
       .charimg { border: solid lightgray 1px; }
       #testinput { width: 20em; }
     </style>
-
-	<script src="pathformer.js"></script>
-	<script src="vivus.js"></script>
-
+    <script src="pathformer.js"></script>
+    <script src="vivus.js"></script> <-- slightly modified by adding pathTimingFunction option -->
     <!-- <script src="vivus.min.js"></script> -->
     <script>
       window.onload = function () {
@@ -24,27 +22,24 @@
 	// get and display characters as a sequence of Promises
 	// https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
 	let out = characters.reduce((sequence, hanzi) => {
-	  return sequence.then(function() {
-	    return getHanziJson(hanzi);
-	  }).then(res => res.json())
-	    .then(out => drawHanzi(hanzi, out.medians))
-	    .catch(err => {
-	      console.log("error on character", hanzi, err);
-	      drawHanzi(hanzi, []);
-	    })
+	  return sequence
+	    .then(() => getHanziJson(hanzi))
+	    .then(res => res.json())
+	    .then(data => drawHanzi(hanzi, data.medians))
+	    .catch(err => drawHanzi(hanzi, [])) // blank character
 	}, Promise.resolve());
       }
       function getHanziJson(hanzi) {
 	let url = 'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/' + hanzi + '.json';
 	return fetch(url);
       }
-      function drawHanzi(hanzi, medians) {
+      function drawHanzi(hanzi, points) {
 	let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="50" width="50" viewBox="0 0 1024 1024">',
 		   '<g transform="scale(1, -1) translate(0, -900)">'];
-	medians.forEach(stroke => {
-	  let points = [];
-	  stroke.forEach(point => points.push(point[0] + ',' + point[1]));
-	  svg.push('<path d="M' + points.join(' ') + '" stroke="blue" stroke-width="30" fill="none"/>');
+	points.forEach(stroke => {
+	  let pathpoints = [];
+	  stroke.forEach(point => pathpoints.push(point[0] + ',' + point[1]));
+	  svg.push('<path d="M' + pathpoints.join(' ') + '" stroke="blue" stroke-width="30" fill="none"/>');
 	});
 	svg.push('</g>');
 	svg.push('</svg></div>');

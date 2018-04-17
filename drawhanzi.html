@@ -26,7 +26,7 @@
 	let characters = testinput.split('');
 	// get and display characters as a sequence of Promises
 	// https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
-	let out = characters.reduce((sequence, hanzi) => {
+	characters.reduce((sequence, hanzi) => {
 	  return sequence
 	    .then(() => getHanziJson(hanzi))
 	    .then(res => res.json())
@@ -39,7 +39,7 @@
 	return fetch(url);
       }
       function drawHanzi(hanzi, points) {
-	let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="50" width="50" viewBox="0 0 1024 1024">',
+	let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="50" width="50" viewBox="0 0 1024 1024" title="' + hanzi + '">',
 		   '<g transform="scale(1, -1) translate(0, -900)">'];
 	points.forEach(stroke => {
 	  let pathpoints = [];
@@ -48,30 +48,66 @@
 	});
 	svg.push('</g>');
 	svg.push('</svg></div>');
-	document.getElementById('tests').innerHTML += svg.join("\n");
+	document.getElementById('tests').insertAdjacentHTML('beforeend', svg.join("\n"));
       }
-      function animateHanzi() {
+      function animateAllHanzi() {
+	document.querySelectorAll("svg").forEach(s => {
+	  if (typeof s.hanzi == "undefined") {
+	    animateHanzi(s);
+	  } else {
+	    //s.hanzi.vivus.reset().play();
+	    //reanimateHanzi(s).then((x) => console.log("done drawing ", x.el.attributes.title.value, s.hanzi));
+	    reanimateHanzi(s);
+	  }
+	});
+	document.getElementById('clickhint').innerHTML = '(click any character to animate it)';
+      }
+      function reanimateAllHanzi() {
+	// this is not what we want, we want the promises executed in a series, so drawing happens sequentially
+	Promise.all(Array.from(document.querySelectorAll("svg")).map(reanimateHanzi)).then(function(values) {
+	  console.log(values);
+	});
+      }
+      async function reanimateAllHanziSequential() {
+	// have to turn the nodelist into an array for forEach?
+	let svgs = Array.from(document.querySelectorAll("svg"));
+	for (const s of svgs) { if (typeof s.hanzi != "undefined") resetHanzi(s) }
+	for (const s of svgs) {
+	  if (typeof s.hanzi != "undefined") {
+	    await reanimateHanzi(s)
+	  } else {
+	    animateHanzi(s)
+	    // should be (but need promise version of the function):
+	    // await animateHanzi(s)
+	  }
+	}
+      }
+      function animateHanzi(s) {
 	// number of frames per stroke: the more strokes, the longer it takes to write
 	let pathDuration = document.getElementById('pathDuration').value;
 	let minPathLength = 1000; // every path will be drawn as slowly as a path of this length
-	document.querySelectorAll("svg")
-	  .forEach(s => {
-	    let numstrokes = s.children[0].children.length || 1;
-	    new Vivus(s, { type: 'oneByOne', duration: numstrokes * pathDuration,
-			   pathTimingFunction: Vivus.EASE_IN, equalPathTimes: minPathLength });
-	    s.onclick =
-	      z => {
-		let pathDuration = document.getElementById('pathDuration').value;
-		let el = z.target;
-		if (el.constructor == window.SVGPathElement) {
-		  // sometimes the click happens on a path, not the svg, in that case just get its ancestor svg
-		  el = el.parentNode.parentNode;
-		}
-		new Vivus(el, { type: 'oneByOne', duration: numstrokes * pathDuration,
-				      pathTimingFunction: Vivus.EASE_IN, equalPathTimes: minPathLength })
-	      };
-	  });
-	document.getElementById('clickhint').innerHTML = '(click any character to animate it)';
+	let numstrokes = s.children[0].children.length || 1;
+	s.hanzi = { character: s.attributes.title.value, numstrokes: numstrokes,
+		    vivus: new Vivus(s, { type: 'oneByOne', duration: numstrokes * pathDuration,
+					  pathTimingFunction: Vivus.EASE_IN, equalPathTimes: minPathLength }) };
+	s.onclick =
+	  z => {
+	    let pathDuration = document.getElementById('pathDuration').value;
+	    let el = z.target;
+	    if (el.constructor == window.SVGPathElement) {
+	      // sometimes the click happens on a path, not the svg, in that case just get its ancestor svg
+	      el = el.parentNode.parentNode;
+	    }
+	    s.hanzi.vivus.reset().play();
+	  };
+      }
+      function resetHanzi(s) {
+	s.hanzi.vivus.reset();
+      }
+      function reanimateHanzi(s) {
+	return new Promise(function(resolve, reject) {
+	  s.hanzi.vivus.reset().play(resolve);
+	});
       }
     </script>
     <body>
@@ -82,7 +118,7 @@
 	from the Make Me a Hanzi project by Shaunak Kishore <a href="https://www.skishore.me/makemeahanzi/">https://www.skishore.me/makemeahanzi/</a>
       </p>
       <div class="charlist"><div class="charimg" title="我">
-      <svg id="example" height="50" width="50" viewBox="0 0 1024 1024">
+      <svg id="example" height="50" width="50" viewBox="0 0 1024 1024" title="我">
 	<g transform="scale(1, -1) translate(0, -900)">
 	  <path d="M458,627 392,631 336,588 274,552 258,550 253,542 220,530 212,532 203,522" stroke="blue" stroke-width="30" fill="none"/>
 	  <path d="M174,404 215,398 241,402 672,514 742,521" stroke="blue" stroke-width="30" fill="none"/>
@@ -99,10 +135,15 @@
       </p>
       <p class="charlist" id="tests"></p>
       <p>
-	<button onclick="animateHanzi()">Animate All</button>
-	Fast <input type="range" min="1" max="100" value="30" id="pathDuration"> Slow
+	<button onclick="animateAllHanzi()">Animate All</button>
+	Fast <input type="range" min="1" max="100" value="10" id="pathDuration"> Slow
 	<span id="clickhint"></span>
+	<button onclick="reanimateAllHanziSequential()">Write Sequentially</button>
+	<button onclick="reanimateAllHanzi()">Write Simultaneous</button>
       </p>
-      <p>Example: <a href="?text=憂鬱的臺灣烏龜">Some complicated characters</a>
+      <p>Examples:
+	<a href="?text=一二三四五六七八九十">一二三四五六七八九十</a> /
+	<a href="?text=憂鬱的臺灣烏龜">憂鬱的臺灣烏龜</a>
+      </p>
     </body>
 </html>

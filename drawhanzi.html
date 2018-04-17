@@ -55,18 +55,19 @@
 	  if (typeof s.hanzi == "undefined") {
 	    animateHanzi(s);
 	  } else {
-	    //s.hanzi.vivus.reset().play();
-	    //reanimateHanzi(s).then((x) => console.log("done drawing ", x.el.attributes.title.value, s.hanzi));
 	    reanimateHanzi(s);
 	  }
 	});
 	document.getElementById('clickhint').innerHTML = '(click any character to animate it)';
       }
       function reanimateAllHanzi() {
-	// this is not what we want, we want the promises executed in a series, so drawing happens sequentially
+	// this animates all the hanzi simultaneously
 	Promise.all(Array.from(document.querySelectorAll("svg")).map(reanimateHanzi)).then(function(values) {
-	  console.log(values);
+	  //console.log(values);
 	});
+      }
+      function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
       }
       async function reanimateAllHanziSequential() {
 	// have to turn the nodelist into an array for forEach?
@@ -80,6 +81,7 @@
 	    // should be (but need promise version of the function):
 	    // await animateHanzi(s)
 	  }
+	  await sleep(500); // pause a little between characters
 	}
       }
       function animateHanzi(s) {

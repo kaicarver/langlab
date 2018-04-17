@@ -1,15 +1,50 @@
 <html>
-  <head><title>Speak</title></head>
+  <head>
+    <meta charset="utf-8">
+    <title>Speak</title>
+    <style>
+      #credits { font-size: 0.6em; }
+    </style>
+    <script>
+      var synth;
+      window.onload = function () {
+	if ('speechSynthesis' in window) {
+	  synth = window.speechSynthesis;
+	}
+	let html = "";
+	// TODO:
+	// - specify language
+	// - allow text to be multilingual via fragments: 'Chinese for hello is: ', '你好'
+	let examples = [
+	  { text: 'Hey Kai, how are you?' },
+	  { text: '你好' },
+	  { text: 'bye'} ];
+	let links = [];
+	let base = location.origin + location.pathname;
+	for (let i = 0; i < examples.length; i++) {
+	  let text = examples[i].text;
+	  links.push('<a href="' + base + '?msg=' + text + '">' + text + '</a>');
+
+	}
+	html = links.join(" / ");
+	document.getElementById('examples').innerHTML = html;
+      }
+    </script>
+  </head>
   <body>
     <h1>Speak</h1>
-    <p>The script below shows an easy way to get a web page to talk.</p>
+    <p>Examples:
+      <span id="examples"></span>
+    </p>
     <form method="get">
       <p>Say:
-	<input type=text name="msg" id="msg" value="hello">
+	<input type=text name="msg" id="msg" value="Hello!">
 	<input type="submit">
 	<button onclick="speak(document.getElementById('msg').value); return false">Speak (in page)</button>
+	<button onclick="speakInAllLanguages(document.getElementById('msg').value); return false">Speak (in all languages)</button>
       </p>
     </form>
+    <p>The script below shows an easy way to get a web page to talk.</p>
     <pre id="code"></pre>
     <script>
       // This function is all you need in order to speak text from any web page (in the default language).
@@ -17,38 +52,49 @@
       //   speak("Hello there!");
   
       function speak(text) {
-	if ('speechSynthesis' in window) {
-	  window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+	if (synth) {
+	  synth.speak(new SpeechSynthesisUtterance(text));
 	}
       }
     </script>
     <script>
       // This is just to specify what to say
-      var msg = 'Hey Kai! How are you?';
+      var msg = '';
       var param = /[&?]msg.?=([^&]+)/.exec(location.search);
       if (param) {
 	msg = decodeURIComponent(param[1]).replace(/\+/g, ' ');
+	document.getElementById('msg').value = msg;
+	// Call the function to speak the specified text.
+	speak(msg);
       }
-      document.getElementById('msg').value = msg;
-      // Call the function to speak the specified text.
-      speak(msg);
+      const sleep = ms => new Promise(r => setTimeout(r, ms))
+      async function speakInAllLanguages(text) {
+	if (synth) {
+	  var voices = synth.getVoices();
+	  for (let i = 0; i < voices.length; i++) {
+	    //for (let i = 0; i < 4; i++) {
+	    let v = voices[i];
+	    console.log(JSON.stringify(v), v);
+	    let utterance = new SpeechSynthesisUtterance(text + v.voiceURI);
+	    utterance.voice = v;
+	    synth.speak(utterance);
+	    await sleep(2000)
+	  }
+	}
+      }
     </script>
     <script>
-      document.getElementById('code').innerText = document.getElementsByTagName('script')[0].innerText;
+      document.getElementById('code').innerText = document.getElementsByTagName('script')[1].innerText;
     </script>
-    <p>TODO: more advanced use: this does not work for Chinese yet:</p>
-    <form method="get">
-      <p>Say:
-	<input type=text name="msg2" id="msg2" value="Chinese hello is 妳好">
-	<input type="submit">
-    <button onclick="void(speak(document.getElementById('msg2').value)); return false">Speak (in page)</button>
-      </p>
-    </form>
     <p>This simple web-based
-      <a href="https://rawgit.com/mdn/web-speech-api/master/speak-easy-synthesis/index.html">speech syntesizer</a>
+      <a href="https://rawgit.com/mdn/web-speech-api/master/speak-easy-synthesis/index.html">speech synthesizer</a>
       from the
       <a href="https://github.com/mdn/web-speech-api">Web Speech API demos by MDN Web Docs</a>
       also handles language, pitch, and rate (but my version handles URL parameters...).
+    </p>
+    <p id="credits">
+      Source code:
+      <a target="_blank" href="https://github.com/kaicarver/langlab">https://github.com/kaicarver/langlab</a>
     </p>
   </body>
 </html>

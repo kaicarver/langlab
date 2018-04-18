@@ -31,7 +31,7 @@
 	}
       }
       function populateVoiceList() {
-	let voices = window.speechSynthesis.getVoices();
+	let voices = getVoices();
 	let voiceSelect = document.getElementById('voiceselect');
 	for (let i = 0; i < voices.length; i++) {
 	  var option = document.createElement('option');
@@ -55,7 +55,7 @@
       <p>Say:
 	<input type=text name="msg" id="msg" value="Hello!">
 	<select id="voiceselect"></select>
-	<button onclick="speakP(document.getElementById('msg').value); return false">Speak (staying in page)</button>
+	<button onclick="speakSpecified(); return false">Speak (staying in page)</button>
 	<button onclick="speakInAllLanguages(document.getElementById('msg').value); return false">Speak in all languages</button>
 	<button onclick="stopAllSpeaking(); return false">Stop speaking</button>
 	<input type="submit" value="Speak (as new URL)">
@@ -76,7 +76,7 @@
 	msg = decodeURIComponent(param[1]).replace(/\+/g, ' ');
 	document.getElementById('msg').value = msg;
 	// Call the function to speak the specified text.
-	speakP(msg);
+	speakP(msg, "zh-TW"); // for some reason the voices are not yet available at this time, so language spec does nothing
       }
 
       const sleep = ms => new Promise(r => setTimeout(r, ms))
@@ -92,15 +92,28 @@
 	})
       }
       async function speakP(text, voice) {
-	let debug = (typeof voice == "undefined") ? text : text + "\" (" + voice.lang + ")";
-	console.log("start saying: ", debug);
+	if (typeof voice == "string") {
+	  let voiceDesc = voice;
+	  voice = undefined;
+	  let voices = getVoices();
+	  console.log("string", voices)
+	  for (let i = 0; i < voices.length; i++) {
+	    console.log(voiceDesc, voices[i].lang)
+	    if (voiceDesc === voices[i].lang) {
+	      voice = voices[i];
+	      break;
+	    }
+	  }
+	}
+	let debug = (typeof voice == "undefined") ? text : text + "\" (" + voice.lang + ", " + voice.name + ")";
+	console.log("start saying: \"" + debug);
 	document.getElementById('voiceinfo').innerHTML = "saying: \"" + debug + "\"";
 	await speakPromise(text, voice);
 	document.getElementById('voiceinfo').innerHTML = "done saying: \"" + debug + "\"";
-	console.log("   ---> done: ", debug);
+	console.log("   ---> done: \"" + debug);
       }
       async function speakInAllLanguages(text) {
-	var voices = window.speechSynthesis.getVoices();
+	let voices = getVoices();
 	stopSpeaking = false;
 	for (let i = 0; i < voices.length && !stopSpeaking; i++) {
 	  let voice = voices[i];
@@ -111,6 +124,21 @@
       function stopAllSpeaking() {
 	window.speechSynthesis.cancel();
 	stopSpeaking = true;
+      }
+      function getVoices() {
+	let voices = window.speechSynthesis.getVoices();
+	voices.sort((a,b) => {
+	  let ret = a.lang.localeCompare(b.lang);
+	  if (ret == 0) ret = a.name.localeCompare(b.name);
+	  return ret;
+	});
+	return voices;
+      }
+      function speakSpecified() {
+	let text = document.getElementById('msg').value;
+	// TODO: using the lang attribute is insufficient, speakP interface should be improved
+	let lang = document.getElementById('voiceselect').selectedOptions[0].getAttribute('data-lang');
+	speakP(text, lang);
       }
     </script>
     <script>

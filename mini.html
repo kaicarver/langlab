@@ -25,6 +25,24 @@
 	}
 	html = links.join(" / ");
 	document.getElementById('examples').innerHTML = html;
+	populateVoiceList();
+	if (speechSynthesis.onvoiceschanged !== undefined) {
+	  speechSynthesis.onvoiceschanged = populateVoiceList;
+	}
+      }
+      function populateVoiceList() {
+	let voices = window.speechSynthesis.getVoices();
+	let voiceSelect = document.getElementById('voiceselect');
+	for (let i = 0; i < voices.length; i++) {
+	  var option = document.createElement('option');
+	  option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+	  if (voices[i].default) {
+	    option.textContent += ' -- DEFAULT';
+	  }	  
+	  option.setAttribute('data-lang', voices[i].lang);
+	  option.setAttribute('data-name', voices[i].name);
+	  voiceSelect.appendChild(option);
+	}	
       }
     </script>
   </head>
@@ -36,11 +54,11 @@
     <form method="get">
       <p>Say:
 	<input type=text name="msg" id="msg" value="Hello!">
-	<select id=""></select>
-	<input type="submit" value="Speak (as new URL)">
+	<select id="voiceselect"></select>
 	<button onclick="speakP(document.getElementById('msg').value); return false">Speak (staying in page)</button>
 	<button onclick="speakInAllLanguages(document.getElementById('msg').value); return false">Speak in all languages</button>
 	<button onclick="stopAllSpeaking(); return false">Stop speaking</button>
+	<input type="submit" value="Speak (as new URL)">
       </p>
     </form>
     <p><span id="voiceinfo">&nbsp;</span></p>
@@ -76,9 +94,9 @@
       async function speakP(text, voice) {
 	let debug = (typeof voice == "undefined") ? text : text + "\" (" + voice.lang + ")";
 	console.log("start saying: ", debug);
-	document.getElementById('voiceinfo').innerHTML = "saying: \"" + debug;
+	document.getElementById('voiceinfo').innerHTML = "saying: \"" + debug + "\"";
 	await speakPromise(text, voice);
-	document.getElementById('voiceinfo').innerHTML = "done saying: \"" + debug;
+	document.getElementById('voiceinfo').innerHTML = "done saying: \"" + debug + "\"";
 	console.log("   ---> done: ", debug);
       }
       async function speakInAllLanguages(text) {
@@ -102,7 +120,7 @@
       <a href="https://rawgit.com/mdn/web-speech-api/master/speak-easy-synthesis/index.html">speech synthesizer</a>
       from the
       <a href="https://github.com/mdn/web-speech-api">Web Speech API demos by MDN Web Docs</a>
-      also handles language, pitch, and rate (but my version handles URL parameters...).
+      also handles language, pitch, and rate (but this tool handles URL parameters...).
     </p>
     <p id="credits">
       Source code:

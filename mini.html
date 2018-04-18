@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <title>Speak</title>
     <style>
+      #voiceinfo { color: blue; font-size: 0.8em; margin-left: 3em; }
       #credits { font-size: 0.6em; }
     </style>
     <script>
@@ -18,13 +19,13 @@
 	let examples = [
 	  { text: 'Hey Kai, how are you?' },
 	  { text: '你好' },
+	  { text: 'Hello 你好 bonjour bye.' },
 	  { text: 'bye'} ];
 	let links = [];
 	let base = location.origin + location.pathname;
 	for (let i = 0; i < examples.length; i++) {
 	  let text = examples[i].text;
 	  links.push('<a href="' + base + '?msg=' + text + '">' + text + '</a>');
-
 	}
 	html = links.join(" / ");
 	document.getElementById('examples').innerHTML = html;
@@ -39,11 +40,13 @@
     <form method="get">
       <p>Say:
 	<input type=text name="msg" id="msg" value="Hello!">
-	<input type="submit">
-	<button onclick="speak(document.getElementById('msg').value); return false">Speak (in page)</button>
-	<button onclick="speakInAllLanguages(document.getElementById('msg').value); return false">Speak (in all languages)</button>
+	<input type="submit" value="Speak (as new URL)">
+	<button onclick="speak(document.getElementById('msg').value); return false">Speak (staying in page)</button>
+	<button onclick="speakInAllLanguages(document.getElementById('msg').value); return false">Speak in all languages</button>
+	<button onclick="stopAllSpeaking(); return false">Stop Speaking</button>
       </p>
     </form>
+    <p><span id="voiceinfo">&nbsp;</span></p>
     <p>The script below shows an easy way to get a web page to talk.</p>
     <pre id="code"></pre>
     <script>
@@ -52,8 +55,8 @@
       //   speak("Hello there!");
   
       function speak(text) {
-	if (synth) {
-	  synth.speak(new SpeechSynthesisUtterance(text));
+	if (window.speechSynthesis) {
+	   window.speechSynthesis.speak(new SpeechSynthesisUtterance(text))
 	}
       }
     </script>
@@ -67,20 +70,37 @@
 	// Call the function to speak the specified text.
 	speak(msg);
       }
+
       const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+      var utterance; // global because bug in garbage collection makes onend not fire sometimes
+      var stopSpeaking = true;
+      function speakPromise(text, voice) {
+	return new Promise((resolve, reject) => {
+	  utterance = new SpeechSynthesisUtterance(text);
+	  if (typeof voice != "undefined") utterance.voice = voice;
+	  utterance.onend = resolve;
+	  window.speechSynthesis.speak(utterance);
+	})
+      }
       async function speakInAllLanguages(text) {
-	if (synth) {
-	  var voices = synth.getVoices();
-	  for (let i = 0; i < voices.length; i++) {
-	    //for (let i = 0; i < 4; i++) {
-	    let v = voices[i];
-	    console.log(JSON.stringify(v), v);
-	    let utterance = new SpeechSynthesisUtterance(text + v.voiceURI);
-	    utterance.voice = v;
-	    synth.speak(utterance);
-	    await sleep(2000)
-	  }
+	//doSpeak(text).then(() => { console.log("done saying", text) })
+	var voices = window.speechSynthesis.getVoices();
+	stopSpeaking = false;
+	for (let i = 0; i < voices.length && !stopSpeaking; i++) {
+	  let voice = voices[i];
+	  let ttext = text + " " + voice.name;
+	  console.log(i, "start saying: ", ttext, voice.lang);
+	  document.getElementById('voiceinfo').innerHTML = "saying: \"" + ttext + "\" (" + voice.lang + ")";
+	  await speakPromise(ttext, voice);
+	  document.getElementById('voiceinfo').innerHTML = "done saying: \"" + ttext + "\" (" + voice.lang + ")";
+	  console.log(i, "   ---> done: ", ttext, voice.lang);
+	  //if (i >= 1) break;
 	}
+      }
+      function stopAllSpeaking() {
+	window.speechSynthesis.cancel();
+	stopSpeaking = true;
       }
     </script>
     <script>

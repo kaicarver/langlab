@@ -14,7 +14,7 @@
       .charimg { border: solid lightgray 1px; display: inline-block; }
       #testinput { width: 20em; }
       svg { visibility: hidden; }
-      button { text-align: center; display: inline-block; height: 2.5em; width: 6em; vertical-align: middle; }
+      button { text-align: center; display: inline-block; height: 2.5em; width: 19vmin; vertical-align: middle; }
       a { text-decoration: none; }
     </style>
     <script src="pathformer.js"></script>
@@ -146,7 +146,7 @@
 	  <button onclick="reanimateAllHanzi()">Write Simultaneous</button>
     </p>
     <div style="text-align: center;">
-      <span style="visibility: hidden">📜</span>
+      <a href="#" onclick="alert('Tap any character to write it again.'); return(false)">?</a>
 	  <button onclick="reanimateAllHanziSequential()">🔄</button>
 	  <button onclick="drawFirst(0)"><span style="color: transparent">⬤</span><span style="color: blue">⬤</span><span style="color: transparent">⬤</span></button>
 	  <button onclick="drawFirst(1)"><span style="color: red">⬤</span><span style="color: blue">⬤</span><span style="color: green">⬤</span></button>

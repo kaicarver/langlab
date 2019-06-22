@@ -54,7 +54,7 @@
         return colors[color++ % colors.length];
       }
       function drawHanzi(hanzi, points, colorPattern) {
-        let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="18vmax" width="18vmax" viewBox="0 0 1024 1024" title="' + hanzi + '">',
+        let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="17vmax" width="17vmax" viewBox="0 0 1024 1024" title="' + hanzi + '">',
                    '<g transform="scale(1, -1) translate(0, -900)">'];
         let color = 'blue'
         if (colorPattern == 1) color = getColor();
@@ -147,7 +147,7 @@
     </p>
     <div style="text-align: center;">
       <span style="visibility: hidden">📜</span>
-	  <button onclick="reanimateAllHanziSequential()">⭮</button>
+	  <button onclick="reanimateAllHanziSequential()">🔄</button>
 	  <button onclick="drawFirst(0)"><span style="color: transparent">⬤</span><span style="color: blue">⬤</span><span style="color: transparent">⬤</span></button>
 	  <button onclick="drawFirst(1)"><span style="color: red">⬤</span><span style="color: blue">⬤</span><span style="color: green">⬤</span></button>
 	  <button onclick="drawFirst(2)"><span style="color: red">◐</span><span style="color: blue">◒</span><span style="color: green">◑</span></button>

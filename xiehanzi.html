@@ -15,6 +15,7 @@
       #testinput { width: 20em; }
       svg { visibility: hidden; }
       button { text-align: center; display: inline-block; height: 2.5em; width: 6em; vertical-align: middle; }
+      a { text-decoration: none; }
     </style>
     <script src="pathformer.js"></script>
     <script src="vivus.js"></script> <!-- slightly modified by adding pathTimingFunction option -->
@@ -145,10 +146,12 @@
 	  <button onclick="reanimateAllHanzi()">Write Simultaneous</button>
     </p>
     <div style="text-align: center;">
+      <span style="visibility: hidden">📜</span>
 	  <button onclick="reanimateAllHanziSequential()">⭮</button>
 	  <button onclick="drawFirst(0)"><span style="color: transparent">⬤</span><span style="color: blue">⬤</span><span style="color: transparent">⬤</span></button>
 	  <button onclick="drawFirst(1)"><span style="color: red">⬤</span><span style="color: blue">⬤</span><span style="color: green">⬤</span></button>
 	  <button onclick="drawFirst(2)"><span style="color: red">◐</span><span style="color: blue">◒</span><span style="color: green">◑</span></button>
+      <a href="https://github.com/kaicarver/langlab/blob/master/xiehanzi.html">📜</a>
     </div>
   </body>
 </html>

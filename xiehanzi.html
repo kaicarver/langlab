@@ -8,36 +8,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Draw Hanzi</title>
     <style>
+      body { text-align: center; }
       #input { display: none; }
-      .charlist { display: flex; flex-wrap: wrap; }
-      .charimg { border: solid lightgray 1px; }
+      .charlist { flex-wrap: wrap; text-align: center; }
+      .charimg { border: solid lightgray 1px; display: inline-block; }
       #testinput { width: 20em; }
       svg { visibility: hidden; }
-      button { text-align: center; }
+      button { text-align: center; display: inline-block; height: 2.5em; width: 5em; vertical-align: middle; }
     </style>
     <script src="pathformer.js"></script>
     <script src="vivus.js"></script> <!-- slightly modified by adding pathTimingFunction option -->
     <!-- <script src="vivus.min.js"></script> -->
     <script>
-      window.onload = function () {
+      window.onload = drawFirst;
+      function drawFirst(colorPattern) {
         var params = (new URL(location)).searchParams;
         var text = params.get('text') || "憂鬱的臺灣烏龜";
         document.title = text;
         document.getElementById("testinput").value = text;
-        drawInput();
-        setTimeout(reanimateAllHanziSequential, 1000);
+        drawInput(colorPattern);
+        setTimeout(reanimateAllHanziSequential, 2000);
       }
-      function drawInput() {
+      function drawInput(colorPattern) {
         let testinput = document.getElementById("testinput").value;
         let characters = testinput.split('');
+        document.getElementById('tests').innerHTML = '';
         // get and display characters as a sequence of Promises
         // https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
         characters.reduce((sequence, hanzi) => {
           return sequence
             .then(() => getHanziJson(hanzi))
             .then(res => res.json())
-            .then(data => drawHanzi(hanzi, data.medians))
-            .catch(err => drawHanzi(hanzi, [])) // blank character
+            .then(data => drawHanzi(hanzi, data.medians, colorPattern))
+            .catch(err => drawHanzi(hanzi, [], colorPattern)) // blank character
         }, Promise.resolve());
       }
       function getHanziJson(hanzi) {
@@ -49,13 +52,16 @@
       function getColor() {
         return colors[color++ % colors.length];
       }
-      function drawHanzi(hanzi, points) {
+      function drawHanzi(hanzi, points, colorPattern) {
         let svg = ['<div class="charimg" title="' + hanzi + '"><svg height="18vmax" width="18vmax" viewBox="0 0 1024 1024" title="' + hanzi + '">',
                    '<g transform="scale(1, -1) translate(0, -900)">'];
+        let color = 'blue'
+        if (colorPattern == 1) color = getColor();
         points.forEach(stroke => {
           let pathpoints = [];
+          if (colorPattern == 2) color = getColor();
           stroke.forEach(point => pathpoints.push(point[0] + ',' + point[1]));
-          svg.push('<path d="M' + pathpoints.join(' ') + '" stroke="' + getColor() + '" stroke-width="50" fill="none"/>');
+          svg.push('<path d="M' + pathpoints.join(' ') + '" stroke="' + color + '" stroke-width="50" fill="none"/>');
         });
         svg.push('</g>');
         svg.push('</svg></div>');
@@ -128,7 +134,7 @@
   </head>
   <body>
     <p id="input">Try it out:
-	  <input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput()">Write</button>
+	  <input type="text" value="道可道非常道" id="testinput"><button onclick="drawInput(0)">Write</button>
     </p>
     <p class="charlist" id="tests"></p>
     <p style="display: none;">
@@ -138,8 +144,11 @@
 	  <button onclick="reanimateAllHanziSequential()">Write Sequentially</button>
 	  <button onclick="reanimateAllHanzi()">Write Simultaneous</button>
     </p>
-    <p style="text-align: center;">
-	  <button onclick="reanimateAllHanziSequential()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
-    </p>
+    <div style="text-align: center;">
+	  <button onclick="reanimateAllHanziSequential()">⼜</button>
+	  <button onclick="drawFirst(0)"><span style="color: transparent">⬤</span><span style="color: blue">⬤</span><span style="color: transparent">⬤</span></button>
+	  <button onclick="drawFirst(1)"><span style="color: red">⬤</span><span style="color: blue">⬤</span><span style="color: green">⬤</span></button>
+	  <button onclick="drawFirst(2)"><span style="color: red">◐</span><span style="color: blue">◒</span><span style="color: green">◑</span></button>
+    </div>
   </body>
 </html>

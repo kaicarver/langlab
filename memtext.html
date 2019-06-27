@@ -28,7 +28,7 @@
         t = t.replace(/\n/g, '<br>');
         container.innerHTML = t;
         // toggle character display
-        container.addEventListener("click", function(e) {
+        container.addEventListener("mousedown", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
             //console.log("character", e.target.textContent, "was clicked!");
             if (e.target.style.color == 'black')
@@ -42,7 +42,7 @@
           if (e.detail > 1) {
             e.preventDefault();
           }
-        }, false);
+        });
       });
       
     </script>

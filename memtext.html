@@ -5,6 +5,7 @@
     <title>Memorize Text</title>
     <style>
       body {  }
+      #text {  }
       .char {
           font-size: 24px;
           width: 25px;
@@ -26,12 +27,22 @@
         t = t.replace(/(.)/g, '<span class="char">$1</span>');
         t = t.replace(/\n/g, '<br>');
         container.innerHTML = t;
+        // toggle character display
         container.addEventListener("click", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
             //console.log("character", e.target.textContent, "was clicked!");
-            e.target.style.color = 'black';
+            if (e.target.style.color == 'black')
+              e.target.style.color = 'white';
+            else
+              e.target.style.color = 'black';
           }
         });
+        // prevent double click from selecting text
+        container.addEventListener("mousedown", function(e) {
+          if (e.detail > 1) {
+            e.preventDefault();
+          }
+        }, false);
       });
       
     </script>

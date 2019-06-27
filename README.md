@@ -23,7 +23,8 @@ Minimal web-based speech synthesis:<br>
 https://rawgit.com/kaicarver/langlab/master/mini.html
 
 Text memorizing tool:<br>
-https://rawgit.com/kaicarver/langlab/master/memtext.html
+https://rawgit.com/kaicarver/langlab/master/memtext.html<br>
+https://raw.githack.com/kaicarver/langlab/master/memtext.html
 
 Also see other language lab experiments still, for some reason, stored here:<br>
 https://github.com/kaicarver/HTML5-Audio

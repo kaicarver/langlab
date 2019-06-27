@@ -22,5 +22,8 @@ https://rawgit.com/kaicarver/langlab/master/drawhanzi.html
 Minimal web-based speech synthesis:<br>
 https://rawgit.com/kaicarver/langlab/master/mini.html
 
+Text meorizing tool:<br>
+https://rawgit.com/kaicarver/langlab/master/memtext.html
+
 Also see other language lab experiments still, for some reason, stored here:<br>
 https://github.com/kaicarver/HTML5-Audio

@@ -8,40 +8,82 @@
           touch-action: manipulation; // faster tap
       }
       #text {  }
+      #popup {
+          position: absolute;
+          border: dotted red 2px;
+          display: none;
+      }
       .char {
           font-size: 96px;
           width: 98px;
           height: 98px;
           display: inline-block;
-          border: solid lightgray 1px;
           padding-left: 10px;
           padding-right: 6px;
           padding-bottom: 16px;
+      }
+      #text .char {
+          border: solid lightgray 1px;
+          color: white;
           margin-left: -1px;
           margin-top: -1px;
-          color: white;
+      }
+      #popup .char {
+          border: solid transparent 1px;
+          color: gray;
+          background-color: white;
+          width: 96px;
+          height: 97px;
       }
     </style>
     <script>
-      window.addEventListener("load", function() {
-        let container = document.getElementById('text')
-        let t = container.innerHTML;
+      function spanify(t) {
         t = t.replace(/(.)/g, '<span class="char">$1</span>');
         t = t.replace(/\n/g, '<br>');
-        container.innerHTML = t;
+        return t;
+      }
+      window.addEventListener("load", function() {
+        let container = document.getElementById('text');
+        let popup = document.getElementById('popup');
+        container.innerHTML = spanify(container.innerHTML);
+        popup.innerHTML = spanify(popup.innerHTML);
         // toggle character display
         container.addEventListener("mousedown", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
-            //console.log("character", e.target.textContent, "was clicked!");
             if (e.target.style.color == 'black')
               e.target.style.color = 'white';
-            else
-              e.target.style.color = 'black';
-            //console.log(e.target.offsetLeft, e.target.offsetTop, e);
+            else {
+              popup = document.getElementById('popup');
+              popup.style.left = e.target.offsetLeft + 'px';
+              popup.style.top = e.target.offsetTop + 'px';
+              popup.style.display = 'block';
+              popup.origin = e.target;
+              //e.target.style.color = 'black';
+            }
           }
         });
         // prevent double click from selecting text
         container.addEventListener("mousedown", function(e) {
+          if (e.detail > 1) {
+            e.preventDefault();
+          }
+        });
+        container.addEventListener("mouseover", function(e) {
+          if (e.target && e.target.nodeName == "SPAN") {
+            popup = document.getElementById('popup');
+            popup.style.left = e.target.offsetLeft + 'px';
+            popup.style.top = e.target.offsetTop + 'px';
+          }
+        });
+        // toggle character display
+        popup.addEventListener("mousedown", function(e) {
+          if (e.target && e.target.nodeName == "SPAN") {
+            popup.origin.style.color = 'black';
+            e.target.parentNode.style.display = 'none';
+          }
+        });
+        // prevent double click from selecting text
+        popup.addEventListener("mousedown", function(e) {
           if (e.detail > 1) {
             e.preventDefault();
           }
@@ -51,6 +93,10 @@
     </script>
   </head>
   <body>
+    <div id="popup">〜
+舍
+利
+子</div>
 <div id="text">般若波羅密多心經
 觀自在菩薩
 行深般若波羅密多時

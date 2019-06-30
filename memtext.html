@@ -8,11 +8,6 @@
           touch-action: manipulation; // faster tap
       }
       #mtext {  }
-      #popup {
-          position: absolute;
-          border: dotted red 2px;
-          display: none;
-      }
       .char {
           font-size: 96px;
           width: 98px;
@@ -28,6 +23,11 @@
           margin-left: -1px;
           margin-top: -1px;
       }
+      #popup {
+          position: absolute;
+          border: dotted red 2px;
+          display: none;
+      }
       #popup .char {
           border: solid transparent 1px;
           color: gray;
@@ -35,6 +35,24 @@
           width: 96px;
           height: 97px;
       }
+      #optio {
+          position: fixed;
+          right: 0px;
+          top: 0px;
+          font-family: Arial;
+          font-size: 25px;
+          text-align: right;
+          color: black;
+          background-color: rgb(255, 255, 255, 0.8); /* white, 0.9 opacity */
+      }
+      #options {
+          font-size: 18px;
+          line-height: 24px;
+          text-align: left;
+          padding: 0px 6px 9px 12px;
+          display: none;
+      }
+      .option { }      
     </style>
     <script>
     // Use the "revealing module pattern"
@@ -54,18 +72,22 @@
         mtext.innerHTML = spanify(mtext.textContent);
         popup.innerHTML = spanify(popup.textContent);
         chars = getchars(mtext.textContent);
+        var choose = false;
         console.log(chars);
         mtext.addEventListener("mousedown", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
             if (e.target.style.color == 'black')
               e.target.style.color = 'white';
             else {
-              popup = document.getElementById('popup');
-              popup.style.left = e.target.offsetLeft + 'px';
-              popup.style.top = e.target.offsetTop + 'px';
-              popup.style.display = 'block';
-              popup.origin = e.target;
-              //e.target.style.color = 'black';
+              if (choose) {
+                popup = document.getElementById('popup');
+                popup.style.left = e.target.offsetLeft + 'px';
+                popup.style.top = e.target.offsetTop + 'px';
+                popup.style.display = 'block';
+                popup.origin = e.target;
+              } else {
+                e.target.style.color = 'black';
+              }
             }
           }
         });
@@ -82,11 +104,27 @@
         }
         mtext.addEventListener("mousedown", preventDoubleClickSelect);
         popup.addEventListener("mousedown", preventDoubleClickSelect);
+        optio.addEventListener("mousedown", preventDoubleClickSelect);
+        function toggleOptions() {
+          if (document.getElementById('options').style.display !== 'block') {
+            document.getElementById('options').style.display = 'block';
+            choose = !choose;
+          } else
+            document.getElementById('options').style.display = 'none';
+        }
+        optio.addEventListener("mousedown", toggleOptions);
       });
     })();
     </script>
   </head>
   <body>
+    <div id="optio">☰
+      <div id="options">
+        <span class="option">Click</span><br>
+        <span class="option">Choose</span><br>
+        <span class="option">Other</span>
+      </div>
+    </div>
     <div id="popup">〜
 舍
 利

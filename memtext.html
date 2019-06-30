@@ -7,7 +7,7 @@
       body {
           touch-action: manipulation; // faster tap
       }
-      #text {  }
+      #mtext {  }
       #popup {
           position: absolute;
           border: dotted red 2px;
@@ -22,7 +22,7 @@
           padding-right: 6px;
           padding-bottom: 16px;
       }
-      #text .char {
+      #mtext .char {
           border: solid lightgray 1px;
           color: white;
           margin-left: -1px;
@@ -37,18 +37,25 @@
       }
     </style>
     <script>
+    // Use the "revealing module pattern"
+    (function () {
       function spanify(t) {
         t = t.replace(/(.)/g, '<span class="char">$1</span>');
         t = t.replace(/\n/g, '<br>');
         return t;
       }
+      function getchars(t) {
+        return t
+          .split('').reduce((map, key) => (map[key] = 1, map), {})
+      }
       window.addEventListener("load", function() {
-        let container = document.getElementById('text');
+        let mtext = document.getElementById('mtext');
         let popup = document.getElementById('popup');
-        container.innerHTML = spanify(container.innerHTML);
-        popup.innerHTML = spanify(popup.innerHTML);
-        // toggle character display
-        container.addEventListener("mousedown", function(e) {
+        mtext.innerHTML = spanify(mtext.textContent);
+        popup.innerHTML = spanify(popup.textContent);
+        chars = getchars(mtext.textContent);
+        console.log(chars);
+        mtext.addEventListener("mousedown", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
             if (e.target.style.color == 'black')
               e.target.style.color = 'white';
@@ -62,34 +69,21 @@
             }
           }
         });
-        // prevent double click from selecting text
-        container.addEventListener("mousedown", function(e) {
-          if (e.detail > 1) {
-            e.preventDefault();
-          }
-        });
-        container.addEventListener("mouseover", function(e) {
-          if (e.target && e.target.nodeName == "SPAN") {
-            popup = document.getElementById('popup');
-            popup.style.left = e.target.offsetLeft + 'px';
-            popup.style.top = e.target.offsetTop + 'px';
-          }
-        });
-        // toggle character display
         popup.addEventListener("mousedown", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
             popup.origin.style.color = 'black';
             e.target.parentNode.style.display = 'none';
           }
         });
-        // prevent double click from selecting text
-        popup.addEventListener("mousedown", function(e) {
+        function preventDoubleClickSelect(e) {
           if (e.detail > 1) {
             e.preventDefault();
           }
-        });
+        }
+        mtext.addEventListener("mousedown", preventDoubleClickSelect);
+        popup.addEventListener("mousedown", preventDoubleClickSelect);
       });
-      
+    })();
     </script>
   </head>
   <body>
@@ -97,7 +91,7 @@
 舍
 利
 子</div>
-<div id="text">般若波羅密多心經
+<div id="mtext">般若波羅密多心經
 觀自在菩薩
 行深般若波羅密多時
 照見五蘊皆空

@@ -8,6 +8,7 @@
           touch-action: manipulation; // faster tap
       }
       #mtext {  }
+      #mpinyin { display: none; }
       .char {
           font-size: 96px;
           width: 98px;
@@ -40,21 +41,38 @@
           right: 0px;
           top: 0px;
           font-family: Arial;
-          font-size: 25px;
+          font-size: 72px;
           text-align: right;
           color: black;
           background-color: rgb(255, 255, 255, 0.8); /* white, 0.9 opacity */
       }
       #options {
-          font-size: 18px;
-          line-height: 24px;
+          font-size: 36px;
+          line-height: 48px;
           text-align: left;
-          padding: 0px 6px 9px 12px;
+          padding: 0px 12px 18px 24px;
           display: none;
       }
       .option { }      
     </style>
     <script>
+    // outside for debugging
+      // Get n distinct random numbers <= max
+      function ndrand(n, max) {
+        var result = [];
+        if (n > 0 && n <= max + 1) {
+          while (result.length < n) {
+            var r = Math.floor(Math.random() * (max + 1));
+            if (result.indexOf(r) === -1) result.push(r);
+          }
+        }
+        return result;
+      }
+      function getchars(t, t2) {
+        var values = t2.split(/ |\n/);
+        var keys =  t.split(/|\n/);
+        return keys.reduce((map, key, i) => (map[key] = values[i], map), {})
+      }
     // Use the "revealing module pattern"
     (function () {
       function spanify(t) {
@@ -62,16 +80,12 @@
         t = t.replace(/\n/g, '<br>');
         return t;
       }
-      function getchars(t) {
-        return t
-          .split('').reduce((map, key) => (map[key] = 1, map), {})
-      }
       window.addEventListener("load", function() {
         let mtext = document.getElementById('mtext');
         let popup = document.getElementById('popup');
         mtext.innerHTML = spanify(mtext.textContent);
         popup.innerHTML = spanify(popup.textContent);
-        chars = getchars(mtext.textContent);
+        chars = getchars(mtext.textContent, document.getElementById('mpinyin').textContent);
         var choose = false;
         console.log(chars);
         mtext.addEventListener("mousedown", function(e) {
@@ -81,6 +95,7 @@
             else {
               if (choose) {
                 popup = document.getElementById('popup');
+                popup.innerHTML = spanify("〜般若\n波羅密\n多心經");
                 popup.style.left = e.target.offsetLeft + 'px';
                 popup.style.top = e.target.offsetTop + 'px';
                 popup.style.display = 'block';
@@ -178,5 +193,51 @@
 即說咒曰
 揭帝揭帝般羅揭帝般羅僧揭帝
 菩提薩婆訶</div>
+<div id="mpinyin">bō rě bō luó mì duō xīn jīng
+guān zì zài pú sà
+xíng shēn bō rě bō luó mì duō shí
+zhào jiàn wǔ yùn jiē kōng
+dù yī qiè kǔ è
+shè lì zi
+sè bù yì kōng
+kōng bù yì sè
+sè jí shì kōng
+kōng jí shì sè
+shòu xiǎng xíng shí yì fù rú shì
+shè lì zi
+shì zhū fǎ kōng xiāng
+bù shēng bù miè
+bù gòu bù jìng
+bù zēng bù jiǎn
+shì gù kōng zhōng wú sè
+wú shòu xiǎng xíng shí
+wú yǎn ěr bí shé shēn yì
+wú sè shēng xiāng wèi chù fǎ
+wú yǎn jiè nǎi zhì wú yì shí jiè
+wú wú míng yì wú wú míng jìn
+nǎi zhì wú lǎo sǐ yì wú lǎo sǐ jìn
+wú kǔ jí miè dào
+wú zhì yì wú dé
+yǐ wú suǒ dé gù
+pú tí sà duǒ yī bō rě bō luó mì duō gù
+xīn wú guà ài
+wú guà ài gù
+wú yǒu kǒng bù
+yuǎn lí diān dǎo mèng xiǎng
+jiù jìng niè pán
+sān shì zhū fó
+yī bō rě bō luó mì duō gù
+dé ā nòu duō luó sān miǎo sān pú tí
+gù zhī bō rě bō luó mì duō
+shì dà shén zhòu
+shì dà míng zhòu
+shì wú shàng zhòu
+shì wú děng děng zhòu
+néng chú yī qiè kǔ
+zhēn shí bù xū
+gù shuō bō rě bō luó mì duō zhòu
+jí shuō zhòu yuē
+jiē dì jiē dì bō luó jiē dì bō luó sēng jiē dì
+pú tí sà pó hē</div>
   </body>
 </html>

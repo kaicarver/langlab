@@ -7,7 +7,8 @@
       body {
           touch-action: manipulation; // faster tap
       }
-      #mtext {  }
+      #content { }
+      #mtext { display: none; }
       #mpinyin { display: none; }
       .char {
           font-size: 96px;
@@ -17,8 +18,9 @@
           padding-left: 10px;
           padding-right: 6px;
           padding-bottom: 16px;
+          vertical-align: top;
       }
-      #mtext .char {
+      #content .char {
           border: solid lightgray 1px;
           color: white;
           margin-left: -1px;
@@ -76,23 +78,51 @@
     // Use the "revealing module pattern"
     (function () {
       function spanify(t) {
+        console.log(t);
         t = t.replace(/(.)/g, '<span class="char">$1</span>');
         t = t.replace(/\n/g, '<br>');
         return t;
       }
+      function buildText(chars, pinyin) {
+        var f = document.createDocumentFragment();
+        var el;
+        var i = 0;
+        var pinyins = pinyin.split(/ |\n/);
+        for (const c of chars.split('')) {
+          if (c == "\n") {
+            el = document.createElement('br');
+          } else {
+            el = document.createElement('span');
+            el.className = 'char';
+            el.innerText = c;
+            el.mychar = c;
+            el.mypinyin = pinyins[i++];
+          }
+          f.appendChild(el);
+        }
+        return f;
+      }
       window.addEventListener("load", function() {
+        let content = document.getElementById('content');
         let mtext = document.getElementById('mtext');
+        let mpinyin = document.getElementById('mpinyin');
         let popup = document.getElementById('popup');
-        mtext.innerHTML = spanify(mtext.textContent);
+        content.appendChild(buildText(mtext.textContent, mpinyin.textContent));
         popup.innerHTML = spanify(popup.textContent);
-        chars = getchars(mtext.textContent, document.getElementById('mpinyin').textContent);
+        chars = getchars(mtext.textContent, mpinyin.textContent);
         var choose = false;
         console.log(chars);
-        mtext.addEventListener("mousedown", function(e) {
+        content.addEventListener("mousedown", function(e) {
           if (e.target && e.target.nodeName == "SPAN") {
-            if (e.target.style.color == 'black')
+            if (e.target.style.color == 'black') {
+              e.target.style.color = 'blue';
+              e.target.style.fontSize = '48px';
+              e.target.textContent = e.target.mypinyin;
+            } else if ( e.target.style.color == 'blue') {
               e.target.style.color = 'white';
-            else {
+              e.target.style.fontSize = '96px';
+              e.target.textContent = e.target.mychar;
+            } else {
               if (choose) {
                 popup = document.getElementById('popup');
                 popup.innerHTML = spanify("〜般若\n波羅密\n多心經");
@@ -117,7 +147,7 @@
             e.preventDefault();
           }
         }
-        mtext.addEventListener("mousedown", preventDoubleClickSelect);
+        content.addEventListener("mousedown", preventDoubleClickSelect);
         popup.addEventListener("mousedown", preventDoubleClickSelect);
         optio.addEventListener("mousedown", preventDoubleClickSelect);
         function toggleOptions(e) {
@@ -143,6 +173,7 @@
     <div id="optio">☰
       <span id="options">Switch<br>to Choose<br>option</span>
     </div>
+    <div id="content"></div>
     <div id="popup">〜
 舍
 利
